@@ -1,0 +1,288 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+<diagram id="erd-physical-db" name="Physical Database ERD (MySQL Schema)">
+<mxGraphModel dx="1082" dy="1354" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1080" math="0" shadow="0">
+<root>
+<mxCell id="0"/>
+<mxCell id="1" parent="0"/>
+
+<!-- ==================== USERS TABLE ==================== -->
+<mxCell id="T_USERS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;users&lt;/b&gt;" vertex="1">
+<mxGeometry height="238" width="290" x="60" y="100" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r1" parent="T_USERS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;user_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r2" parent="T_USERS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;name&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r3" parent="T_USERS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;email&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r4" parent="T_USERS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;password&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r5" parent="T_USERS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;role&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r6" parent="T_USERS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="160" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r7" parent="T_USERS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;is_deleted&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="186" as="geometry"/>
+</mxCell>
+<mxCell id="T_USERS_r8" parent="T_USERS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="212" as="geometry"/>
+</mxCell>
+
+<!-- ==================== EQUIPMENT TABLE ==================== -->
+<mxCell id="T_EQUIPMENT" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;equipment&lt;/b&gt;" vertex="1">
+<mxGeometry height="264" width="310" x="540" y="100" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r1" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;equipment_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r2" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;name&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r3" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;category&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r4" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;location&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r5" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;status&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r6" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;qr_code&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="160" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r7" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="186" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r8" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;is_deleted&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="212" as="geometry"/>
+</mxCell>
+<mxCell id="T_EQUIPMENT_r9" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="310" y="238" as="geometry"/>
+</mxCell>
+
+<!-- ==================== ACTIVITY LOGS TABLE ==================== -->
+<mxCell id="T_ACTIVITY" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;activity_logs&lt;/b&gt;" vertex="1">
+<mxGeometry height="212" width="290" x="60" y="480" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r1" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;activity_log_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r2" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;user_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r3" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;action&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r4" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;details&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r5" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;target_type&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r6" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;target_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="160" as="geometry"/>
+</mxCell>
+<mxCell id="T_ACTIVITY_r7" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="186" as="geometry"/>
+</mxCell>
+
+<!-- ==================== MAINTENANCE REQUESTS TABLE ==================== -->
+<mxCell id="T_REQUESTS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;maintenance_requests&lt;/b&gt;" vertex="1">
+<mxGeometry height="394" width="340" x="540" y="480" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r1" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;request_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r2" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;equipment_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r3" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;reporter_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r4" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;technician_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r5" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;description&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r6" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;urgency&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="160" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r7" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;image&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="186" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r8" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;status&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="212" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r9" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;affected_component&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="238" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r10" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;date_reported&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="264" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r11" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;date_responded&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="290" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r12" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;repair_start&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="316" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r13" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;technician_notes&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="342" as="geometry"/>
+</mxCell>
+<mxCell id="T_REQUESTS_r14" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="340" y="368" as="geometry"/>
+</mxCell>
+
+<!-- ==================== MAINTENANCE LOGS TABLE ==================== -->
+<mxCell id="T_LOGS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;maintenance_logs&lt;/b&gt;" vertex="1">
+<mxGeometry height="290" width="320" x="1080" y="480" as="geometry"/>
+</mxCell>
+<mxCell id="jOvprRBnW8bPXOyV4Ic--2" parent="T_LOGS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;log_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r2" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;equipment_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r3" parent="T_LOGS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;request_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r4" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;technician_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r5" parent="T_LOGS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;action_taken&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r6" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;repair_start&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="160" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r7" parent="T_LOGS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;date_completed&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="186" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r8" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;duration_minutes&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="212" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r9" parent="T_LOGS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;is_deleted&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="238" as="geometry"/>
+</mxCell>
+<mxCell id="T_LOGS_r10" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="320" y="264" as="geometry"/>
+</mxCell>
+
+<!-- ==================== NOTIFICATIONS TABLE ==================== -->
+<mxCell id="T_NOTIFS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;notifications&lt;/b&gt;" vertex="1">
+<mxGeometry height="186" width="290" x="60" y="780" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r1" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#dc2626; font-size:11px;&apos;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;notification_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="30" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r2" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;color:#2563eb; font-size:11px;&apos;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/span&gt; &lt;span style=&apos;font-weight:bold; color:#0f172a;&apos;&gt;user_id&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="56" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r3" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;message&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="82" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r4" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;link&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="108" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r5" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;is_read&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="134" as="geometry"/>
+</mxCell>
+<mxCell id="T_NOTIFS_r6" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
+<mxGeometry height="26" width="290" y="160" as="geometry"/>
+</mxCell>
+
+<!-- ==================== RELATIONSHIPS (CONNECTOR LINES) ==================== -->
+<!-- Users -> Maintenance Logs (Technician) -->
+<mxCell id="rel_u_log" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.62;exitY=0;exitDx=0;exitDy=0;entryX=0.996;entryY=0.048;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_LOGS">
+<mxGeometry relative="1" x="-0.1925" as="geometry">
+<Array as="points">
+<mxPoint x="240" y="20"/>
+<mxPoint x="1460" y="20"/>
+<mxPoint x="1460" y="491"/>
+<mxPoint x="1410" y="491"/>
+<mxPoint x="1410" y="493"/>
+</Array>
+</mxGeometry>
+</mxCell>
+
+<!-- Users -> Notifications -->
+<mxCell id="rel_u_notif" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.38;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.054;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_NOTIFS">
+<mxGeometry relative="1" x="0.0406" as="geometry">
+<Array as="points">
+<mxPoint x="170.2" y="50"/>
+<mxPoint x="20" y="50"/>
+<mxPoint x="20" y="790"/>
+</Array>
+</mxGeometry>
+</mxCell>
+
+<!-- Users -> Activity Logs -->
+<mxCell id="rel_u_act" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0;exitY=0.17;exitDx=0;exitDy=0;entryX=-0.008;entryY=0.069;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_ACTIVITY">
+<mxGeometry relative="1" x="0.072" as="geometry">
+<Array as="points">
+<mxPoint x="40" y="140.5"/>
+<mxPoint x="40" y="494.6"/>
+</Array>
+</mxGeometry>
+</mxCell>
+
+<!-- Users -> Maintenance Requests (Reporter) -->
+<mxCell id="rel_u_req_rep" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1;exitY=0.15;exitDx=0;exitDy=0;">
+<mxGeometry relative="1" x="0.0026" as="geometry">
+<Array as="points">
+<mxPoint x="430" y="135"/>
+<mxPoint x="430" y="450"/>
+<mxPoint x="650" y="450"/>
+</Array>
+<mxPoint x="650" y="480" as="targetPoint"/>
+</mxGeometry>
+</mxCell>
+
+<!-- Users -> Maintenance Requests (Technician) -->
+<mxCell id="rel_u_req_tech" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1;exitY=0.23;exitDx=0;exitDy=0;entryX=0.002;entryY=0.044;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_REQUESTS">
+<mxGeometry relative="1" x="0.0389" as="geometry">
+<Array as="points">
+<mxPoint x="410" y="154.7"/>
+<mxPoint x="410" y="497.3"/>
+</Array>
+</mxGeometry>
+</mxCell>
+
+<!-- Equipment -> Maintenance Requests -->
+<mxCell id="rel_eq_req" edge="1" parent="1" source="T_EQUIPMENT" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1.002;exitY=0.064;exitDx=0;exitDy=0;entryX=0.46;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;">
+<mxGeometry relative="1" as="geometry">
+<mxPoint x="869.9999999999998" y="364" as="sourcePoint"/>
+<mxPoint x="871.3999999999999" y="480" as="targetPoint"/>
+</mxGeometry>
+</mxCell>
+
+<!-- Equipment -> Maintenance Logs -->
+<mxCell id="rel_eq_log" edge="1" parent="1" source="T_EQUIPMENT" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.596;exitY=0.001;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="T_LOGS">
+<mxGeometry relative="1" x="0.2516" as="geometry">
+<Array as="points">
+<mxPoint x="724.8" y="70"/>
+<mxPoint x="980" y="70"/>
+<mxPoint x="980" y="445"/>
+<mxPoint x="1240" y="445"/>
+</Array>
+</mxGeometry>
+</mxCell>
+
+<!-- Maintenance Requests -> Maintenance Logs -->
+<mxCell id="jOvprRBnW8bPXOyV4Ic--3" edge="1" parent="1" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmandOne;startArrow=ERmandOne;rounded=0;entryX=0;entryY=0.076;entryDx=0;entryDy=0;entryPerimeter=0;startSize=10;endSize=10;strokeWidth=1.5;strokeColor=#475569;" target="T_LOGS" value="">
+<mxGeometry height="100" relative="1" width="100" as="geometry">
+<mxPoint x="880" y="500" as="sourcePoint"/>
+<mxPoint x="980" y="400" as="targetPoint"/>
+</mxGeometry>
+</mxCell>
+
+</root>
+</mxGraphModel>
+</diagram>
+</mxfile>
