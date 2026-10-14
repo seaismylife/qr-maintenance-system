@@ -1,6 +1,7 @@
 import os
+import shutil
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, date, timezone
 from pathlib import Path
 import mysql.connector
 from mysql.connector import pooling
@@ -21,8 +22,22 @@ def get_db():
         "ssl_disabled": getattr(config, "MYSQL_SSL_DISABLED", True),
         "autocommit": False,
     }
-    if getattr(config, "MYSQL_SSL_CA", ""):
-        conn_kwargs["ssl_ca"] = config.MYSQL_SSL_CA
+
+    if not conn_kwargs["ssl_disabled"]:
+        ssl_ca = getattr(config, "MYSQL_SSL_CA", "").strip()
+        if not ssl_ca:
+            try:
+                import certifi
+                ssl_ca = certifi.where()
+            except ImportError:
+                for candidate in ["/etc/ssl/certs/ca-certificates.crt", "/etc/pki/tls/certs/ca-bundle.crt"]:
+                    if os.path.exists(candidate):
+                        ssl_ca = candidate
+                        break
+        if ssl_ca:
+            conn_kwargs["ssl_ca"] = ssl_ca
+            if getattr(config, "MYSQL_SSL_VERIFY", True):
+                conn_kwargs["ssl_verify_cert"] = True
 
     if _pool is None:
         try:
@@ -35,7 +50,17 @@ def get_db():
             bcur.close()
             bootstrap.close()
         except Exception:
-            pass
+            try:
+                boot_kwargs = dict(conn_kwargs)
+                boot_kwargs["database"] = "test"
+                bootstrap = mysql.connector.connect(**boot_kwargs)
+                bcur = bootstrap.cursor()
+                bcur.execute(f"CREATE DATABASE IF NOT EXISTS `{config.MYSQL_DB}`")
+                bootstrap.commit()
+                bcur.close()
+                bootstrap.close()
+            except Exception:
+                pass
 
         pool_size = max(5, min(32, getattr(config, "MYSQL_POOL_SIZE", 16)))
         try:
@@ -118,6 +143,8 @@ def get_db():
                 repair_start    DATETIME NULL,
                 duration_minutes INT NULL,
                 technician_id   INT NULL,
+                is_deleted      TINYINT(1) NOT NULL DEFAULT 0,
+                deleted_at      DATETIME NULL,
                 FOREIGN KEY (equipment_id) REFERENCES equipment(id),
                 FOREIGN KEY (request_id)   REFERENCES maintenance_requests(id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
@@ -167,6 +194,8 @@ def get_db():
             ("maintenance_logs", "repair_start", "DATETIME NULL"),
             ("maintenance_logs", "duration_minutes", "INT NULL"),
             ("maintenance_logs", "technician_id", "INT NULL"),
+            ("maintenance_logs", "is_deleted", "TINYINT(1) NOT NULL DEFAULT 0"),
+            ("maintenance_logs", "deleted_at", "DATETIME NULL"),
         ]
 
         for tbl, col, col_def in columns_to_ensure:
@@ -208,6 +237,7 @@ def get_db():
             ("maintenance_logs", "idx_ml_equipment_id", "equipment_id"),
             ("maintenance_logs", "idx_ml_request_id", "request_id"),
             ("maintenance_logs", "idx_ml_date_completed", "date_completed"),
+            ("maintenance_logs", "idx_ml_is_deleted", "is_deleted"),
             ("activity_logs", "idx_act_created_at", "created_at"),
             ("notifications", "idx_notif_user_read", "user_id, is_read"),
         ]
@@ -258,23 +288,152 @@ def log_activity(db, actor_id, action, details=None, target_type=None, target_id
     cur.close()
 
 
-def backup_database(output_path):
-    db_name = config.MYSQL_DB
-    cmd = [
-        "mysqldump",
-        "--host", config.MYSQL_HOST,
-        "--port", str(config.MYSQL_PORT),
-        "--user", config.MYSQL_USER,
+def _find_mysql_binary(binary_name: str) -> str | None:
+    found = shutil.which(binary_name)
+    if found:
+        return found
+    candidates = [
+        rf"C:\xampp\mysql\bin\{binary_name}.exe",
+        rf"D:\xampp\mysql\bin\{binary_name}.exe",
+        rf"E:\xampp\mysql\bin\{binary_name}.exe",
+        rf"C:\Program Files\MySQL\MySQL Server 8.0\bin\{binary_name}.exe",
+        rf"C:\Program Files\MySQL\MySQL Server 8.4\bin\{binary_name}.exe",
+        rf"C:\Program Files\MariaDB 10.4\bin\{binary_name}.exe",
+        rf"C:\Program Files\MariaDB 10.5\bin\{binary_name}.exe",
+        rf"C:\Program Files\MariaDB 10.6\bin\{binary_name}.exe",
+        rf"C:\Program Files\MariaDB 10.11\bin\{binary_name}.exe",
+        rf"C:\Program Files\MariaDB 11.0\bin\{binary_name}.exe",
+        rf"/usr/bin/{binary_name}",
+        rf"/usr/local/bin/{binary_name}",
+        rf"/opt/homebrew/bin/{binary_name}",
     ]
-    if config.MYSQL_PASSWORD:
-        cmd.append(f"--password={config.MYSQL_PASSWORD}")
-    cmd.append(db_name)
+    for path in candidates:
+        if os.path.isfile(path):
+            return path
+    return None
 
+
+def backup_database(output_path):
     output_dir = Path(output_path).parent
     output_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as handle:
-        subprocess.run(cmd, check=True, stdout=handle)
-    return output_path
+    db_name = config.MYSQL_DB
+
+    # 1. Try using mysqldump CLI binary if present
+    dump_bin = _find_mysql_binary("mysqldump")
+    if dump_bin:
+        try:
+            cmd = [
+                dump_bin,
+                "--host", config.MYSQL_HOST,
+                "--port", str(config.MYSQL_PORT),
+                "--user", config.MYSQL_USER,
+            ]
+            if config.MYSQL_PASSWORD:
+                cmd.append(f"--password={config.MYSQL_PASSWORD}")
+            cmd.append(db_name)
+
+            with open(output_path, "w", encoding="utf-8") as handle:
+                subprocess.run(cmd, check=True, stdout=handle)
+            return output_path
+        except Exception:
+            pass  # Fall through to pure Python dump
+
+    # 2. Pure Python dump fallback using MySQL connection
+    db = get_db()
+    try:
+        cur = db.cursor()
+        lines = [
+            f"-- CICT QRMS MySQL Database Backup",
+            f"-- Database: `{db_name}`",
+            f"-- Generated: {now_utc().strftime('%Y-%m-%d %H:%M:%S UTC')}",
+            "",
+            "SET FOREIGN_KEY_CHECKS = 0;",
+            "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';",
+            "",
+        ]
+        cur.execute("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
+        tables = [row[0] for row in cur.fetchall()]
+
+        for table in tables:
+            lines.append(f"-- --------------------------------------------------------")
+            lines.append(f"-- Table structure for table `{table}`")
+            lines.append(f"-- --------------------------------------------------------")
+            lines.append(f"DROP TABLE IF EXISTS `{table}`;")
+            cur.execute(f"SHOW CREATE TABLE `{table}`")
+            create_row = cur.fetchone()
+            if create_row:
+                lines.append(f"{create_row[1]};")
+                lines.append("")
+
+            cur.execute(f"SELECT * FROM `{table}`")
+            rows = cur.fetchall()
+            if rows:
+                col_names = [d[0] for d in cur.description]
+                cols_sql = ", ".join(f"`{c}`" for c in col_names)
+                batch_size = 50
+                for i in range(0, len(rows), batch_size):
+                    batch = rows[i:i + batch_size]
+                    val_rows = []
+                    for r in batch:
+                        parts = []
+                        for val in r:
+                            if val is None:
+                                parts.append("NULL")
+                            elif isinstance(val, (int, float)):
+                                parts.append(str(val))
+                            elif isinstance(val, (datetime, date)):
+                                parts.append(f"'{val.strftime('%Y-%m-%d %H:%M:%S')}'")
+                            elif isinstance(val, bytes):
+                                parts.append(f"0x{val.hex()}")
+                            else:
+                                esc = str(val).replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n").replace("\r", "\\r")
+                                parts.append(f"'{esc}'")
+                        val_rows.append(f"({', '.join(parts)})")
+                    lines.append(f"INSERT INTO `{table}` ({cols_sql}) VALUES\n" + ",\n".join(val_rows) + ";")
+                lines.append("")
+
+        lines.append("SET FOREIGN_KEY_CHECKS = 1;")
+        cur.close()
+
+        with open(output_path, "w", encoding="utf-8") as handle:
+            handle.write("\n".join(lines))
+        return output_path
+    finally:
+        db.close()
+
+
+def restore_database(sql_text: str):
+    # 1. Try mysql CLI binary if available
+    mysql_bin = _find_mysql_binary("mysql")
+    if mysql_bin:
+        try:
+            cmd = [
+                mysql_bin,
+                "--host", config.MYSQL_HOST,
+                "--port", str(config.MYSQL_PORT),
+                "--user", config.MYSQL_USER,
+            ]
+            if config.MYSQL_PASSWORD:
+                cmd.append(f"--password={config.MYSQL_PASSWORD}")
+            cmd.append(config.MYSQL_DB)
+            subprocess.run(cmd, input=sql_text, text=True, check=True)
+            return True
+        except Exception:
+            pass  # Fall through to pure Python restore
+
+    # 2. Pure Python restore fallback
+    db = get_db()
+    try:
+        cur = db.cursor()
+        cur.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        for _ in cur.execute(sql_text, multi=True):
+            pass
+        cur.execute("SET FOREIGN_KEY_CHECKS = 1;")
+        db.commit()
+        cur.close()
+        return True
+    finally:
+        db.close()
 
 
 def peso(amount) -> str:

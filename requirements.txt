@@ -4,5 +4,7 @@ bcrypt>=4.1
 requests>=2.31
 Werkzeug>=3.0
 python-dotenv>=1.0.0
+cryptography>=41.0.0
+certifi>=2023.7.22
 waitress>=3.0.0
 gunicorn>=21.2.0; sys_platform != "win32"

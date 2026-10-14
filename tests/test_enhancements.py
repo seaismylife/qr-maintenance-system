@@ -133,6 +133,12 @@ class TestDatabaseSchemaAndQueries(unittest.TestCase):
         self.cur.execute("SHOW COLUMNS FROM maintenance_logs LIKE 'technician_id'")
         self.assertIsNotNone(self.cur.fetchone(), "technician_id column must exist on maintenance_logs")
 
+        self.cur.execute("SHOW COLUMNS FROM maintenance_logs LIKE 'is_deleted'")
+        self.assertIsNotNone(self.cur.fetchone(), "is_deleted column must exist on maintenance_logs")
+
+        self.cur.execute("SHOW COLUMNS FROM maintenance_logs LIKE 'deleted_at'")
+        self.assertIsNotNone(self.cur.fetchone(), "deleted_at column must exist on maintenance_logs")
+
     def test_active_under_repair_query(self):
         """Checks query structure used in Admin Dashboard Active Work Tracker."""
         sql = """
@@ -204,6 +210,56 @@ class TestDatabaseSchemaAndQueries(unittest.TestCase):
         self.cur.execute(sql)
         rows = self.cur.fetchall()
         self.assertIsInstance(rows, list)
+
+    def test_maintenance_logs_soft_delete(self):
+        """Verifies that soft-deleted maintenance logs remain in the database with is_deleted=1."""
+        # 1. Fetch an existing equipment and request, or create minimal test entry
+        self.cur.execute("SELECT id FROM equipment LIMIT 1")
+        eq = self.cur.fetchone()
+        self.cur.execute("SELECT id FROM maintenance_requests LIMIT 1")
+        req = self.cur.fetchone()
+
+        if eq and req:
+            eq_id = eq["id"] if isinstance(eq, dict) else eq[0]
+            req_id = req["id"] if isinstance(req, dict) else req[0]
+
+            self.cur.execute(
+                "INSERT INTO maintenance_logs (equipment_id, request_id, action_taken, date_completed, is_deleted) "
+                "VALUES (%s, %s, 'Soft-delete test action', NOW(), 0)",
+                (eq_id, req_id)
+            )
+            self.db.commit()
+            log_id = self.cur.lastrowid
+
+            # Verify initially is_deleted=0
+            self.cur.execute("SELECT id, is_deleted, deleted_at FROM maintenance_logs WHERE id=%s", (log_id,))
+            row = self.cur.fetchone()
+            self.assertEqual(row["is_deleted"] if isinstance(row, dict) else row[1], 0)
+
+            # Soft-delete the log record
+            self.cur.execute(
+                "UPDATE maintenance_logs SET is_deleted=1, deleted_at=NOW() WHERE id=%s",
+                (log_id,)
+            )
+            self.db.commit()
+
+            # Record MUST still exist in table
+            self.cur.execute("SELECT id, is_deleted, deleted_at FROM maintenance_logs WHERE id=%s", (log_id,))
+            del_row = self.cur.fetchone()
+            self.assertIsNotNone(del_row, "Soft deleted log must still physically exist in the database table")
+            self.assertEqual(del_row["is_deleted"] if isinstance(del_row, dict) else del_row[1], 1)
+            self.assertIsNotNone(del_row["deleted_at"] if isinstance(del_row, dict) else del_row[2])
+
+            # Active logbook query MUST NOT return it
+            self.cur.execute(
+                "SELECT id FROM maintenance_logs WHERE id=%s AND (is_deleted IS NULL OR is_deleted=0)",
+                (log_id,)
+            )
+            self.assertIsNone(self.cur.fetchone(), "Active logbook queries must filter out soft-deleted logs")
+
+            # Clean up test row
+            self.cur.execute("DELETE FROM maintenance_logs WHERE id=%s", (log_id,))
+            self.db.commit()
 
 
 if __name__ == "__main__":

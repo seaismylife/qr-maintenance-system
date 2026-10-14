@@ -27,9 +27,11 @@ class TestAdminAndManagement(unittest.TestCase):
             response = client.post(
                 "/user_management/delete/1",
                 data={"csrf_token": "valid-token-for-test-xyz"},
-                follow_redirects=True
+                follow_redirects=False
             )
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 302)
+            self.assertIn("/user_management", response.headers.get("Location", ""))
+
 
     def test_equipment_delete_endpoint_requires_csrf(self):
         flask_app.config.update(TESTING=True)
