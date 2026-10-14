@@ -92,16 +92,20 @@
             <td><span class="{{ status_badge(row.status) }}">{{ row.status|clean }}</span></td>
             <td>
                 {% if row.qr_code %}
-                    <a href="{{ url_for('qr.download', equipment_id=(row.id or row._id)|string) }}" title="Download QR Code">
+                    <a href="{{ url_for('qr.print_sheet', ids=(row.id or row._id)|string) }}" target="_blank" title="Print QR Label for {{ row.name|clean }}">
                         <img src="{{ row.qr_code }}" width="48" height="48" style="border-radius:6px;border:1px solid var(--line);background:#fff;display:block;" alt="QR" onerror="this.style.display='none'">
                     </a>
                 {% else %}
-                    <a href="{{ url_for('qr.download', equipment_id=(row.id or row._id)|string) }}" class="btn secondary btn-sm" title="Generate &amp; Download QR">QR &darr;</a>
+                    <a href="{{ url_for('qr.print_sheet', ids=(row.id or row._id)|string) }}" target="_blank" class="btn secondary btn-sm" title="Print QR Label">Print QR</a>
                 {% endif %}
             </td>
             <td style="text-align:right;">
                 <div style="display:inline-flex;gap:6px;align-items:center;">
-                    <a class="btn secondary btn-sm" href="{{ url_for('qr.download', equipment_id=(row.id or row._id)|string) }}" title="Download QR Code">QR &darr;</a>
+                    <a class="btn secondary btn-sm" href="{{ url_for('qr.print_sheet', ids=(row.id or row._id)|string) }}" target="_blank" title="Print QR Code Label with Name">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Print QR
+                    </a>
+
                     {% if user and user.role in ['admin', 'custodian'] %}
                     <a class="btn secondary btn-sm" href="{{ url_for('equipment.index', edit=(row.id or row._id)|string) }}">Edit</a>
                     <form method="post" action="{{ url_for('equipment.delete_equipment', equipment_id=(row.id or row._id)) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to archive equipment \'{{ row.name|clean }}\'?');">

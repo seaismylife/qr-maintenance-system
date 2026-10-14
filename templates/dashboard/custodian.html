@@ -154,11 +154,15 @@
             <td>
                 {% if eq.qr_code %}
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <img src="{{ eq.qr_code }}" width="40" height="40"
-                             style="border-radius:4px;border:1px solid var(--line);background:#fff;" alt="QR">
-                        <a href="{{ url_for('qr.download', equipment_id=(eq.id or eq._id)|string) }}"
-                           class="btn secondary btn-sm" title="Download QR">↓</a>
+                        <a href="{{ url_for('qr.print_sheet', ids=(eq.id or eq._id)|string) }}" target="_blank" title="Print QR Label for {{ eq.name|clean }}">
+                            <img src="{{ eq.qr_code }}" width="40" height="40"
+                                 style="border-radius:4px;border:1px solid var(--line);background:#fff;" alt="QR">
+                        </a>
+                        <a href="{{ url_for('qr.print_sheet', ids=(eq.id or eq._id)|string) }}"
+                           target="_blank"
+                           class="btn secondary btn-sm" title="Print QR Label">Print</a>
                     </div>
+
                 {% else %}
                     <a href="{{ url_for('equipment.index', edit=(eq.id or eq._id)|string) }}"
                        class="btn secondary btn-sm">Generate</a>

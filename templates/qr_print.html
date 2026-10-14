@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print QR Codes — Equipment Maintenance</title>
+    <title>{% if equipment|length == 1 %}Print QR Label — {{ equipment[0].name|clean }}{% else %}Print QR Codes — Equipment Maintenance{% endif %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2563eb;
@@ -38,7 +38,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
-        .screen-bar h1 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+        .screen-bar h1 { font-size: 1.15rem; font-weight: 700; color: var(--text); }
         .screen-bar p { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
 
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -55,18 +55,77 @@
         .btn-secondary:hover { background: var(--bg); }
 
         .qr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        
+        /* Single label view styling */
+        .qr-single-wrap {
+            max-width: 380px;
+            margin: 30px auto;
+        }
+        .qr-single-card {
+            background: #fff;
+            border: 2px solid #0f172a;
+            border-radius: 12px;
+            padding: 24px 20px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        .qr-single-card .sticker-header {
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--muted);
+            margin-bottom: 12px;
+            border-bottom: 1px dashed var(--line);
+            padding-bottom: 6px;
+        }
+        .qr-single-card img {
+            width: 190px;
+            height: 190px;
+            display: block;
+            margin: 0 auto 14px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+        .qr-single-card .qr-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+        .qr-single-card .qr-sub {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+        .qr-single-card .qr-footer {
+            font-size: 0.75rem;
+            color: var(--muted);
+            border-top: 1px dashed var(--line);
+            padding-top: 8px;
+            margin-top: 10px;
+        }
+
+        /* Multi-card grid styling */
         .qr-card {
             background: #fff; border: 1px solid var(--line); border-radius: 10px;
             padding: 20px 16px 16px; text-align: center;
             page-break-inside: avoid; break-inside: avoid;
         }
         .qr-card img { width: 140px; height: 140px; display: block; margin: 0 auto 14px; border-radius: 4px; object-fit: contain; }
-        .qr-name { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 4px; word-break: break-word; }
+        .qr-name { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 4px; word-break: break-word; }
         .qr-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 12px; }
         .qr-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         .qr-actions a { font-size: 0.78rem; font-weight: 600; padding: 5px 12px; border-radius: 5px; text-decoration: none; border: 1px solid transparent; }
-        .btn-dl { background: var(--primary); color: #fff; }
-        .btn-dl:hover { background: #1d4ed8; }
+        .btn-print-card { background: #0f172a; color: #fff; }
+        .btn-print-card:hover { background: #334155; }
+        .btn-dl { background: var(--bg); color: var(--text); border: 1px solid var(--line) !important; }
+        .btn-dl:hover { background: #e2e8f0; }
+
         .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
         .empty-state h2 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
         .empty-state p { font-size: 0.9rem; }
@@ -75,10 +134,40 @@
             body { background: #fff; padding: 0; }
             .screen-bar, .qr-actions { display: none !important; }
             .qr-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
-            .qr-card { border: 1px solid #ccc; padding: 10px; border-radius: 6px; box-shadow: none; break-inside: avoid; }
+            .qr-card { border: 1px solid #94a3b8; padding: 10px; border-radius: 6px; box-shadow: none; break-inside: avoid; }
             .qr-card img { width: 110px; height: 110px; margin-bottom: 8px; }
-            .qr-name { font-size: 0.8rem; margin-bottom: 2px; }
-            .qr-sub { font-size: 0.7rem; margin-bottom: 0; }
+            .qr-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; color: #000; }
+            .qr-sub { font-size: 0.72rem; margin-bottom: 0; color: #334155; }
+
+            /* Single label print output */
+            .qr-single-wrap {
+                max-width: 320px;
+                margin: 20px auto;
+                padding: 0;
+            }
+            .qr-single-card {
+                border: 2px solid #000 !important;
+                padding: 16px !important;
+                box-shadow: none !important;
+                border-radius: 8px !important;
+            }
+            .qr-single-card img {
+                width: 170px !important;
+                height: 170px !important;
+                margin-bottom: 10px !important;
+            }
+            .qr-single-card .qr-name {
+                font-size: 1.2rem !important;
+                color: #000 !important;
+            }
+            .qr-single-card .qr-sub {
+                font-size: 0.85rem !important;
+                color: #000 !important;
+            }
+            .qr-single-card .qr-footer {
+                color: #334155 !important;
+                font-size: 0.7rem !important;
+            }
         }
         @media (max-width: 600px) {
             .qr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -96,8 +185,13 @@
 <body>
 <div class="screen-bar">
     <div>
-        <h1>QR Code Sheet</h1>
-        <p>{{ equipment|length }} equipment label{{ 's' if equipment|length != 1 else '' }} ready to print</p>
+        {% if equipment|length == 1 %}
+            <h1>Equipment QR Label</h1>
+            <p><strong>{{ equipment[0].name|clean }}</strong> &middot; {{ equipment[0].location|clean }}</p>
+        {% else %}
+            <h1>QR Code Sheet</h1>
+            <p>{{ equipment|length }} equipment label{{ 's' if equipment|length != 1 else '' }} ready to print</p>
+        {% endif %}
     </div>
     <div class="btn-group">
         <a class="btn btn-secondary" href="{{ url_for('dashboard.' ~ user.role) if user and user.role else url_for('auth.login') }}" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
@@ -106,15 +200,36 @@
         </a>
         <button class="btn btn-primary" onclick="window.print()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Print All
+            {% if equipment|length == 1 %}Print Label{% else %}Print All Labels{% endif %}
         </button>
     </div>
 </div>
 
 {% if not equipment %}
 <div class="empty-state">
-    <h2>No QR codes yet</h2>
+    <h2>No QR codes found</h2>
     <p>Add equipment first to automatically generate QR codes.</p>
+</div>
+{% elif equipment|length == 1 %}
+{% set eq = equipment[0] %}
+<div class="qr-single-wrap">
+    <div class="qr-single-card">
+        <div class="sticker-header">Institutional Laboratory Asset</div>
+        <img src="{{ eq.qr_code }}" alt="QR for {{ eq.name|clean }}">
+        <div class="qr-name">{{ eq.name|clean }}</div>
+        <div class="qr-sub">{{ eq.category|clean }}{% if eq.category and eq.location %} &middot; {% endif %}{{ eq.location|clean }}</div>
+        <div class="qr-footer">Scan with mobile camera to report issue or inspect status</div>
+        <div class="qr-actions" style="margin-top:16px;">
+            <button class="btn btn-primary btn-sm" onclick="window.print()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print Label
+            </button>
+            <a class="btn-dl" href="{{ url_for('qr.download', equipment_id=(eq.id or eq._id)|string) }}" style="display:inline-flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PNG
+            </a>
+        </div>
+    </div>
 </div>
 {% else %}
 <div class="qr-grid">
@@ -124,7 +239,8 @@
         <div class="qr-name">{{ eq.name|clean }}</div>
         <div class="qr-sub">{{ eq.category|clean }}{% if eq.category and eq.location %} &middot; {% endif %}{{ eq.location|clean }}</div>
         <div class="qr-actions">
-            <a class="btn-dl" href="{{ url_for('qr.download', equipment_id=(eq.id or eq._id)|string) }}">Download</a>
+            <a class="btn-print-card" href="{{ url_for('qr.print_sheet', ids=(eq.id or eq._id)|string) }}" target="_blank" title="Print only this label">Print</a>
+            <a class="btn-dl" href="{{ url_for('qr.download', equipment_id=(eq.id or eq._id)|string) }}" title="Download PNG file">Download</a>
         </div>
     </div>
     {% endfor %}
@@ -132,3 +248,4 @@
 {% endif %}
 </body>
 </html>
+
