@@ -4,7 +4,6 @@ from routes.decorators import role_required
 
 my_req_bp = Blueprint("my_req", __name__, url_prefix="/my_requests")
 
-
 @my_req_bp.route("/")
 @role_required("faculty")
 def index():

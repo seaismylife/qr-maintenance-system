@@ -7,7 +7,6 @@ from models.security import (
     clear_failed_logins,
 )
 
-
 def _set_session(client, role="admin"):
     with client.session_transaction() as session:
         session["user"] = {
@@ -17,7 +16,6 @@ def _set_session(client, role="admin"):
             "role": role,
         }
         session["last_activity"] = "9999999999"
-
 
 def test_csrf_token_generation_and_validation():
     flask_app.config.update(TESTING=True)
@@ -30,15 +28,12 @@ def test_csrf_token_generation_and_validation():
         assert validate_csrf_token("") is False
         assert validate_csrf_token(None) is False
 
-
 def test_csrf_protection_rejects_missing_token_on_protected_routes():
     flask_app.config.update(TESTING=True)
     with flask_app.test_client() as client:
         _set_session(client, "admin")
-        # Attempt POST to equipment without CSRF token
         response = client.post("/equipment/", data={"name": "PC #99", "category": "Desktop Workstation", "location": "Laboratory 1"})
         assert response.status_code == 400
-
 
 def test_csrf_protection_allows_valid_token_in_form_or_header():
     flask_app.config.update(TESTING=True)
@@ -48,23 +43,19 @@ def test_csrf_protection_allows_valid_token_in_form_or_header():
         assert validate_csrf_token("test-valid-csrf-token-12345") is True
         assert validate_csrf_token("wrong-token") is False
 
-
 def test_login_rate_limiting():
     ip = "192.0.2.1"
 
     clear_failed_logins(ip)
     assert is_login_rate_limited(ip) is False
 
-    # Simulate 5 failed attempts
     for _ in range(5):
         record_failed_login(ip)
 
     assert is_login_rate_limited(ip) is True
 
-    # Clear and verify reset
     clear_failed_logins(ip)
     assert is_login_rate_limited(ip) is False
-
 
 def test_security_headers_present():
     flask_app.config.update(TESTING=True)

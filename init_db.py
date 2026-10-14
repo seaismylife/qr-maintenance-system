@@ -15,7 +15,6 @@ def reset_data():
     db.close()
     seed_mysql.main()
 
-
 def initialize(seed: bool = False, reset: bool = False, max_retries: int = 5, retry_delay: int = 3):
     if reset:
         print("[init_db] Resetting and seeding database tables...")
@@ -43,7 +42,6 @@ def initialize(seed: bool = False, reset: bool = False, max_retries: int = 5, re
         print("[init_db] Running database seed...")
         seed_mysql.main()
         print("[init_db] Seed completed successfully.")
-
 
 if __name__ == "__main__":
     should_reset = "--reset" in sys.argv or "--clean-data" in sys.argv

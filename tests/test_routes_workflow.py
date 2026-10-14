@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app import app
 from models import get_db
 
-
 class TestRoutesWorkflow(unittest.TestCase):
     def setUp(self):
         self.app = app
@@ -19,7 +18,6 @@ class TestRoutesWorkflow(unittest.TestCase):
         self.app.config["WTF_CSRF_ENABLED"] = False
         self.client = self.app.test_client()
 
-        # Find or use an admin user from the database
         db = get_db()
         cur = db.cursor(dictionary=True)
         cur.execute("SELECT id, name, email, role FROM users WHERE role = 'admin' LIMIT 1")
@@ -68,21 +66,16 @@ class TestRoutesWorkflow(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         html = resp.data.decode("utf-8")
         
-        # Check Section 3.0 (7-Lab Matrix)
         for i in range(1, 8):
             self.assertIn(f"Laboratory {i}", html)
         
-        # Check Section 4.0 (Problem Identification)
         self.assertIn("Equipment Needing Frequent Repair", html)
         self.assertIn("Equipment with Multiple Repair Records", html)
         
-        # Check Section 5.0 (Technician Performance)
         self.assertIn("Technician Performance &amp; Workload", html)
 
-        # Check Section 6.0 (Recurring Incidents)
         self.assertIn("Most Common Equipment Issues", html)
 
-        # Check Section 7.0 (Audit Trail with Calculated Duration)
         self.assertIn("Complete Maintenance Log History", html)
         self.assertIn("Repair Duration", html)
         self.assertIn("Start Date &amp; Time", html)
@@ -106,12 +99,10 @@ class TestRoutesWorkflow(unittest.TestCase):
             sess["user"] = self.admin_user
             sess["role"] = "admin"
 
-        # View Logbook
         resp = self.client.get("/logbook/")
         self.assertEqual(resp.status_code, 200)
         html = resp.data.decode("utf-8")
         self.assertIn("Action Taken / Resolution", html)
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

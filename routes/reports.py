@@ -13,17 +13,14 @@ reports_bp = Blueprint("reports", __name__, url_prefix="/admin_reports")
 
 ALLOWED_EXT = {"png", "jpg", "jpeg", "gif", "webp"}
 
-
 def _allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXT
-
 
 def _parse_date(s, fallback):
     try:
         return datetime.strptime(s, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     except Exception:
         return fallback
-
 
 def _format_duration(hours):
     if hours is None:
@@ -48,7 +45,6 @@ def _format_duration(hours):
     else:
         return f"{s}s"
 
-
 @reports_bp.route("/")
 @role_required("admin")
 def index():
@@ -57,7 +53,6 @@ def index():
         cur = db.cursor(dictionary=True)
         now = datetime.now(timezone.utc)
 
-        # Default to previous 30 days to ensure rich recent data is captured
         default_from = (now - timedelta(days=30)).strftime("%Y-%m-%d")
         from_str = request.args.get("from", default_from)
         to_str   = request.args.get("to",   now.strftime("%Y-%m-%d"))
@@ -68,7 +63,6 @@ def index():
         time_window = request.args.get("time_window", "90").strip()
         technician_id = oid(request.args.get("technician_id"))
 
-        # If user picked a timely month (e.g. 2026-09)
         if month:
             try:
                 parts = month.split("-")
@@ -101,10 +95,8 @@ def index():
             params.append(lab)
         where_clause = " AND ".join(filter_parts)
 
-        # 7 specific laboratories
         locations = ALLOWED_LABORATORIES
 
-        # Query available recorded timely months
         cur.execute(
             """
             SELECT DISTINCT 
@@ -117,7 +109,6 @@ def index():
         )
         available_months = cur.fetchall()
 
-        # Laboratory Specific Diagnostics (If a specific lab is selected)
         lab_stats = None
         lab_equipment = []
         lab_history = []
@@ -152,7 +143,6 @@ def index():
                 "readiness": lab_readiness,
             }
 
-            # Laboratory maintenance history
             cur.execute(
                 """
                 SELECT mr.id AS request_id, e.name AS equipment_name, e.category, mr.description,
@@ -177,7 +167,6 @@ def index():
                 else:
                     lh["duration_str"] = _format_duration(lh.get("duration_hours"))
 
-        # Comparative overview guaranteeing all 7 institutional laboratories
         cur.execute(
             """
             SELECT 
@@ -210,11 +199,9 @@ def index():
             row_data["readiness_rate"] = round((w / tot * 100), 1) if tot > 0 else 0.0
             all_labs_summary.append(row_data)
 
-        # 1. Total institutional equipment count
         cur.execute("SELECT COUNT(*) AS total FROM equipment WHERE (is_deleted IS NULL OR is_deleted=0)")
         total_equipment = cur.fetchone()["total"] or 0
 
-        # 2. Overall KPI Counts within filter period
         cur.execute(
             f"""
             SELECT 
@@ -237,7 +224,6 @@ def index():
         rejected_req = int(kpi_counts.get("rejected_req") or 0)
         resolution_rate = round((resolved_req / total_req * 100), 1) if total_req > 0 else 0.0
 
-        # 3. Frequency by equipment
         cur.execute(
             f"""
             SELECT e.name AS name, e.location, COUNT(*) AS total
@@ -252,7 +238,6 @@ def index():
         )
         freq_rows = cur.fetchall()
 
-        # 4. Monthly Trend Data (for charts and breakdown table)
         cur.execute(
             f"""
             SELECT 
@@ -281,10 +266,8 @@ def index():
             mb["avg_hours_val"] = float(mb["avg_hours"]) if mb["avg_hours"] else None
             mb["avg_duration_str"] = _format_duration(mb["avg_hours_val"])
 
-        # Chart format (ascending order)
         monthly_chart = sorted(monthly_breakdown, key=lambda x: x["m"])
 
-        # 5. Average response & resolution times
         cur.execute(
             f"""
             SELECT AVG(TIMESTAMPDIFF(SECOND, mr.date_reported, COALESCE(mr.date_responded, NOW())) / 3600) AS avg_hours
@@ -309,7 +292,6 @@ def index():
         avg_res_val = cur.fetchone()["avg_hours"]
         avg_res = float(avg_res_val) if avg_res_val is not None else None
 
-        # 6. Most common issues by category
         cur.execute(
             f"""
             SELECT e.category, COUNT(mr.id) AS count
@@ -324,7 +306,6 @@ def index():
         )
         common_issues = cur.fetchall()
 
-        # 7. Peak reporting hour
         cur.execute(
             f"""
             SELECT HOUR(mr.date_reported) AS peak_hour, COUNT(*) as c
@@ -340,7 +321,6 @@ def index():
         peak_row = cur.fetchone()
         peak_hour_str = f"{int(peak_row['peak_hour']):02d}:00" if peak_row and peak_row["peak_hour"] is not None else "N/A"
 
-        # 8. Technician Performance & Turnaround Analysis
         cur.execute(
             f"""
             SELECT 
@@ -368,7 +348,6 @@ def index():
         )
         tech_stats = cur.fetchall()
 
-        # Detailed breakdown of equipment fixed per technician
         cur.execute(
             f"""
             SELECT 
@@ -395,7 +374,6 @@ def index():
         )
         fixed_logs = cur.fetchall()
 
-        # Group fixed equipment under each technician
         fixed_by_tech = {}
         for fl in fixed_logs:
             tid = fl["technician_id"] or 0
@@ -416,7 +394,6 @@ def index():
             comp = ts["completed_repairs"] or 0
             ts["efficiency_rate"] = round((comp / tot_a * 100), 1) if tot_a > 0 else 0.0
 
-        # 9. Problem Identification & Problematic Device Analytics
         window_days = None
         if time_window != "all":
             try:
@@ -472,7 +449,6 @@ def index():
                 pd["flag_label"] = "Monitored Incident"
                 pd["badge_class"] = "badge-info"
 
-        # Problem Identification: Component failure patterns
         cur.execute(
             f"""
             SELECT 
@@ -491,7 +467,6 @@ def index():
         )
         component_failures = cur.fetchall()
 
-        # 10. Dedicated Individual Technician Reporting
         cur.execute("SELECT id, name, email FROM users WHERE role='technician' AND (is_deleted IS NULL OR is_deleted=0) ORDER BY name ASC")
         technicians_list = cur.fetchall()
 
@@ -611,7 +586,6 @@ def index():
                     "audit_logs": tech_audit_logs,
                 }
 
-        # Individual Technician CSV Export
         if request.args.get("export") == "tech_csv" and individual_tech_report:
             buf = io.StringIO()
             w = csv.writer(buf)
@@ -646,7 +620,6 @@ def index():
                 headers={"Content-Disposition": f"attachment; filename=Technician_Report_{t_name_slug}_{to_str}.csv"}
             )
 
-        # 11. Detailed Maintenance Logs (Audit Trail)
         cur.execute(
             f"""
             SELECT e.name AS equipment_name, e.category, e.location, mr.description, mr.urgency, mr.status, 
@@ -671,7 +644,6 @@ def index():
             else:
                 dl["duration_str"] = _format_duration(dl.get("duration_hours"))
 
-        # CSV Export Handling
         if request.args.get("export") == "csv":
             buf = io.StringIO()
             w = csv.writer(buf)
@@ -708,7 +680,6 @@ def index():
         categories = [r["category"] for r in cur.fetchall()]
         cur.close()
 
-        # Prepare document header metadata for print view
         doc_metadata = {
             "ref_no": f"NEUST-CICT-MR-{now.strftime('%Y%m%d')}",
             "generated_at": now.strftime("%B %d, %Y %I:%M %p"),
@@ -759,7 +730,6 @@ def index():
     finally:
         db.close()
 
-
 def _get_manual_report_data(cur):
     cur.execute(
         "SELECT id, name, category, location FROM equipment "
@@ -781,7 +751,6 @@ def _get_manual_report_data(cur):
 
     laboratories = sorted(list(labs_set), key=_lab_sort_key)
     return equipment_list, laboratories
-
 
 @reports_bp.route("/manual_report", methods=["GET", "POST"])
 @role_required("faculty", "admin")
@@ -837,7 +806,6 @@ def manual_report():
                 (equipment_id, reporter_id, description, urgency, image_path, affected, now_utc().replace(tzinfo=None)),
             )
 
-            # Trigger notifications for Technicians/Admins & Reporter confirmation
             cur.execute("SELECT id FROM users WHERE role IN ('technician', 'admin') AND (is_deleted IS NULL OR is_deleted=0)")
             recipients = [r["id"] for r in cur.fetchall()]
             if reporter_id and reporter_id not in recipients:
@@ -861,7 +829,6 @@ def manual_report():
             cur.close()
             return redirect(url_for("my_req.index"))
 
-        # GET
         equipment_list, laboratories = _get_manual_report_data(cur)
         cur.close()
         return render_template(

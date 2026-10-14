@@ -20,7 +20,6 @@
         </span>
         {% endif %}
     </div>
-
     {% if request.args.get('error') == 'action_required' %}
     <div style="
         background: rgba(239,68,68,0.1);
@@ -44,7 +43,6 @@
         <strong>Verification Required:</strong> Only an Administrator can officially close and resolve a request after reviewing completed work.
     </div>
     {% endif %}
-
     <input class="table-search" id="searchRequests" type="search" placeholder="Search requests, equipment, reporter, technician…"
         onkeyup="filterTable('searchRequests', 'requestsTable')">
     <div class="table-wrap">
@@ -94,7 +92,6 @@
                             </a>
                         </div>
                         {% endif %}
-
                         {% if r.technician_notes %}
                         <div style="margin-top: 8px; font-size: 0.8rem; background: rgba(37,99,235,0.07); border: 1px solid rgba(37,99,235,0.2); border-radius: 6px; padding: 6px 10px;">
                             <strong style="color: var(--primary); display: flex; align-items: center; gap: 4px;">
@@ -140,7 +137,6 @@
                         {% endif %}
                     </td>
                     <td>
-                        {# ──────────────── ADMIN WORKFLOW ──────────────── #}
                         {% if user and user.role == 'admin' %}
                             {% if r.status == 'Completed - Pending Verification' %}
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -156,7 +152,6 @@
                                         Verify &amp; Resolve
                                     </button>
                                 </form>
-
                                 <form method="post" class="request-form" style="display: flex; gap: 6px;">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="request_id" value="{{ r.id }}">
@@ -175,7 +170,6 @@
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="request_id" value="{{ r.id }}">
                                 <input type="hidden" name="equipment_id" value="{{ r.equipment_id }}">
-
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <select name="status" data-current="{{ r.status }}" style="margin: 0; flex: 1;">
                                         <option value="Pending" {{ 'selected' if r.status == 'Pending' else '' }}>Pending</option>
@@ -186,7 +180,6 @@
                                     </select>
                                     <button type="submit" class="btn btn-sm" style="margin: 0; white-space: nowrap; height: 100%;">Update</button>
                                 </div>
-
                                 <div class="action-input-group" style="display: {{ 'flex' if r.status in ['Resolved', 'Completed - Pending Verification'] else 'none' }}; gap: 6px; flex-direction: column;">
                                     <input type="text" name="action_taken" placeholder="Action taken / Resolution notes"
                                         value="{{ r.technician_notes or '' }}" style="margin: 0; flex: 1;">
@@ -196,8 +189,6 @@
                                 </div>
                             </form>
                             {% endif %}
-
-                        {# ──────────────── TECHNICIAN WORKFLOW ──────────────── #}
                         {% else %}
                             {% if r.status == 'Completed - Pending Verification' %}
                             <div style="background: var(--bg-accent); border: 1px dashed var(--line); border-radius: 6px; padding: 8px 10px; text-align: center;">
@@ -209,14 +200,12 @@
                                 </div>
                             </div>
                             {% elif user and (user.id|string == r.technician_id|string) %}
-                            {# Assigned to current technician #}
                             <form method="post" class="request-form"
                                   style="display: flex; flex-direction: column; gap: 8px; min-width: 230px;"
                                   onsubmit="return validateRequestForm(this);">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="request_id" value="{{ r.id }}">
                                 <input type="hidden" name="equipment_id" value="{{ r.equipment_id }}">
-
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <select name="status" data-current="{{ r.status }}" style="margin: 0; flex: 1;">
                                         {% if r.status == 'Pending' %}
@@ -234,7 +223,6 @@
                                         Submit
                                     </button>
                                 </div>
-
                                 <div class="action-input-group" style="display: {{ 'flex' if r.status == 'In Progress' else 'none' }}; gap: 6px; flex-direction: column;">
                                     <input type="text" name="action_taken" placeholder="Action taken / repair notes (required for completion)"
                                         value="{{ r.technician_notes or '' }}" style="margin: 0; flex: 1;">
@@ -244,7 +232,6 @@
                                 </div>
                             </form>
                             {% else %}
-                            {# Assigned to another technician (read-only) #}
                             <div style="background: var(--bg-accent); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
                                 Assigned to {{ r.technician_name|clean }}
                             </div>
@@ -267,13 +254,11 @@
         </table>
     </div>
 </div>
-
 <script>
     // Initialize form behavior
     document.querySelectorAll('select[name="status"]').forEach(function (sel) {
         var form = sel.closest('form');
         var actionGroup = form.querySelector('.action-input-group');
-
         sel.addEventListener('change', function () {
             if (actionGroup) {
                 var requiresAction = (this.value === 'Resolved' || this.value === 'Completed - Pending Verification');
@@ -283,14 +268,12 @@
             if (errorSpan) { errorSpan.style.display = 'none'; }
         });
     });
-
     // Client-side validation
     function validateRequestForm(form) {
         var statusSel = form.querySelector('select[name="status"]');
         var statusVal = statusSel ? statusSel.value : (form.querySelector('input[name="status"]') ? form.querySelector('input[name="status"]').value : '');
         var actionInput = form.querySelector('input[name="action_taken"]');
         var errorSpan = form.querySelector('.action-error');
-
         if (statusVal === 'Resolved' || statusVal === 'Completed - Pending Verification') {
             if (actionInput && !actionInput.value.trim()) {
                 var actionGroup = form.querySelector('.action-input-group');

@@ -4,7 +4,6 @@ from routes.decorators import role_required
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
-
 @dashboard_bp.route("/admin")
 @role_required("admin")
 def admin():
@@ -102,7 +101,6 @@ def admin():
         from models import format_duration_minutes, now_utc
         now_time = now_utc().replace(tzinfo=None)
 
-        # 1. Active Work Tracker for Under Repair items
         under_repair_items = []
         try:
             cur.execute(
@@ -138,7 +136,6 @@ def admin():
         except Exception:
             pass
 
-        # 2. Monthly Technician Metrics (assigned vs. completed)
         current_month_key = now_time.strftime("%Y-%m")
         current_month_label = now_time.strftime("%B %Y")
         technician_workload = []
@@ -171,7 +168,6 @@ def admin():
         except Exception:
             pass
 
-        # 3. Problem Identification & Problematic Device Watchlist
         problematic_devices = []
         try:
             cur.execute(
@@ -231,7 +227,6 @@ def admin():
         )
     finally:
         db.close()
-
 
 @dashboard_bp.route("/custodian")
 @role_required("custodian", "admin")
@@ -293,7 +288,6 @@ def custodian():
         )
     finally:
         db.close()
-
 
 @dashboard_bp.route("/technician")
 @role_required("technician", "admin")
@@ -394,7 +388,6 @@ def technician():
         )
     finally:
         db.close()
-
 
 @dashboard_bp.route("/faculty")
 @role_required("faculty", "admin")

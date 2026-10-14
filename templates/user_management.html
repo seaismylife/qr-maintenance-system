@@ -41,7 +41,6 @@
         </div>
     </form>
 </div>
-
 <div class="card">
     <div class="card-header">
         <div>
@@ -52,7 +51,6 @@
         </div>
     </div>
     <div style="background:var(--bg-accent); padding:16px 20px; border-radius:10px; border:1px solid var(--line); display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; margin:0;">
-        <!-- Export Section -->
         <div style="display:flex; flex-direction:column; gap:8px;">
             <strong style="font-size:0.88rem; color:var(--text); letter-spacing:-0.01em;">Export Database Backup</strong>
             <a class="btn secondary btn-sm" href="{{ url_for('user_mgmt.backup_db') }}" style="height:38px; min-height:38px; padding:0 14px; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; font-size:0.84rem; font-weight:600;">
@@ -60,11 +58,7 @@
                 Download .SQL Backup
             </a>
         </div>
-
-        <!-- Vertical Divider -->
         <div style="width:1px; background:var(--line); align-self:stretch; min-height:42px; margin:0 4px;"></div>
-
-        <!-- Restore Section -->
         <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:min(100%, 340px);">
             <strong style="font-size:0.88rem; color:var(--text); letter-spacing:-0.01em;">Restore From Backup File</strong>
             <form method="post" action="{{ url_for('user_mgmt.restore_db') }}" enctype="multipart/form-data" style="margin:0; display:flex; gap:10px; align-items:center; flex-wrap:nowrap;">
@@ -81,7 +75,6 @@
         </div>
     </div>
 </div>
-
 <div class="card">
     <div class="card-header">
         <h2>Registered Accounts ({{ users|length }})</h2>

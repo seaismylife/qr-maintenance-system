@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block head %}
 <style>
 /* Urgency chips */
@@ -93,7 +92,6 @@
 }
 </style>
 {% endblock %}
-
 {% block content %}
 <div class="card" style="max-width: 680px; margin: 0 auto;">
     <div class="card-header">
@@ -102,13 +100,11 @@
             Use this form when a camera is broken, blurry, or unavailable to scan a QR code.
         </p>
     </div>
-
     {% if success %}
     <div class="alert-success">
         Issue report submitted successfully. It has been added to the maintenance queue.
     </div>
     {% endif %}
-
     {% if errors %}
     <div class="alert-error">
         <strong style="display:block; margin-bottom:6px;">Please fix the following:</strong>
@@ -117,11 +113,8 @@
         </ul>
     </div>
     {% endif %}
-
     <form method="POST" enctype="multipart/form-data" style="margin-top:24px;" id="manualReportForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-        <!-- Laboratory Selection Dropdown -->
         <div class="form-group" style="margin-bottom:18px;">
             <label for="laboratory_select" style="display:block; font-weight:600; margin-bottom:6px;">
                 Select Laboratory / Room <span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);">(Filter by Lab)</span>
@@ -138,8 +131,6 @@
                 Choose a laboratory to quickly filter the equipment list below.
             </div>
         </div>
-
-        <!-- Equipment -->
         <div class="form-group" style="margin-bottom:18px;">
             <label for="equipment_id" style="display:block; font-weight:600; margin-bottom:6px;">
                 Equipment <span style="color:#ef4444;">*</span>
@@ -161,7 +152,6 @@
                 <strong>Location:</strong> <span id="infoLocation">—</span>
             </div>
         </div>
-
         <div style="margin-bottom:18px; padding:14px 18px; background:rgba(21,71,160,0.05); border:1px solid rgba(21,71,160,0.15); border-radius:10px; font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
             <strong style="color:var(--text); display:block; margin-bottom:6px;">Category Guide</strong>
             <strong>Desktop Workstation</strong> — Covers full set: PC, Monitor, Keyboard, Mouse, AVR<br>
@@ -169,8 +159,6 @@
             <strong>Networking & Power</strong> — Routers, Switches, Standalone UPS<br>
             <strong>Peripherals & Office</strong> — Printers, Scanners
         </div>
-
-        <!-- Affected Component -->
         <div class="form-group" style="margin-bottom:18px;">
             <label for="affected_component" style="display:block; font-weight:600; margin-bottom:6px;">
                 Affected Component / Part
@@ -185,8 +173,6 @@
                 <option value="Other Component">Other Component</option>
             </select>
         </div>
-
-        <!-- Description -->
         <div class="form-group" style="margin-bottom:18px;">
             <label for="description" style="display:block; font-weight:600; margin-bottom:6px;">
                 Issue Description <span style="color:#ef4444;">*</span>
@@ -195,8 +181,6 @@
                       placeholder="Describe the issue in detail (e.g. camera is blurry, projector not turning on, etc.)">{{ form.get('description') or '' }}</textarea>
             <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;" id="charCount">0 / 500 characters</div>
         </div>
-
-        <!-- Urgency -->
         <div class="form-group" style="margin-bottom:18px;">
             <label style="display:block; font-weight:600; margin-bottom:8px;">
                 Priority / Urgency Level <span style="color:#ef4444;">*</span>
@@ -217,8 +201,6 @@
                 </label>
             </div>
         </div>
-
-        <!-- Image (optional) -->
         <div class="form-group" style="margin-bottom:24px;">
             <label for="image" style="display:block; font-weight:600; margin-bottom:6px;">
                 Photo Evidence <span style="font-weight:400; color:var(--text-muted);">(optional)</span>
@@ -245,14 +227,11 @@
                        style="display:none;" onchange="previewImage(this)">
             </div>
         </div>
-
-        <!-- Note banner -->
         <div class="note-banner">
             <strong>Note:</strong> Use this form when a camera is broken, blurry, or glitchy and you
             can't scan the QR code. The report will be filed as <em>Pending</em> and appear in the
             maintenance queue immediately, logged as submitted by <strong>{{ user.name }}</strong>.
         </div>
-
         <div class="btn-row">
             <button type="submit" class="btn" id="submitBtn">
                 <span id="submitLabel">Submit Report</span>
@@ -261,10 +240,8 @@
         </div>
     </form>
 </div>
-
 <script>
 var allEquipmentOptions = [];
-
 function initEquipmentOptions() {
     var sel = document.getElementById('equipment_id');
     if (!sel) return;
@@ -280,19 +257,15 @@ function initEquipmentOptions() {
         });
     }
 }
-
 function filterEquipmentByLab(selectedLab, preserveVal) {
     var sel = document.getElementById('equipment_id');
     if (!sel || !allEquipmentOptions.length) return;
-    
     var currentVal = preserveVal || sel.value;
     sel.innerHTML = '';
-    
     var defaultOpt = document.createElement('option');
     defaultOpt.value = '';
     defaultOpt.textContent = selectedLab ? '— Select equipment in ' + selectedLab + ' —' : '— Select equipment —';
     sel.appendChild(defaultOpt);
-    
     var hasMatch = false;
     var matchCount = 0;
     allEquipmentOptions.forEach(function (item) {
@@ -311,17 +284,14 @@ function filterEquipmentByLab(selectedLab, preserveVal) {
             matchCount++;
         }
     });
-    
     if (selectedLab && matchCount === 0) {
         defaultOpt.textContent = '— No equipment found in ' + selectedLab + ' —';
     }
-    
     if (!hasMatch) {
         sel.value = '';
     }
     updateEquipmentInfo(sel);
 }
-
 function updateEquipmentInfo(sel) {
     var opt  = sel.options[sel.selectedIndex];
     var info = document.getElementById('equipmentInfo');
@@ -332,7 +302,6 @@ function updateEquipmentInfo(sel) {
     document.getElementById('infoCategory').textContent = opt.dataset.category || '—';
     document.getElementById('infoLocation').textContent = opt.dataset.location || '—';
     if (info) info.style.display = 'block';
-
     // Auto-select lab dropdown if currently unselected
     var labSel = document.getElementById('laboratory_select');
     if (labSel && opt.dataset.location && !labSel.value) {
@@ -345,25 +314,20 @@ function updateEquipmentInfo(sel) {
         }
     }
 }
-
 window.addEventListener('DOMContentLoaded', function () {
     initEquipmentOptions();
-
     var labSel = document.getElementById('laboratory_select');
     var sel = document.getElementById('equipment_id');
-
     if (labSel && labSel.value) {
         filterEquipmentByLab(labSel.value, sel ? sel.value : '');
     } else if (sel && sel.value) {
         updateEquipmentInfo(sel);
     }
-
     var desc = document.getElementById('description');
     var cc   = document.getElementById('charCount');
     function updateCount() { cc.textContent = desc.value.length + ' / 500 characters'; }
     desc.addEventListener('input', updateCount);
     updateCount();
-
     // Drag & drop
     var dz = document.getElementById('dropZone');
     dz.addEventListener('dragover', function (e) { e.preventDefault(); dz.classList.add('drag-over'); });
@@ -378,7 +342,6 @@ window.addEventListener('DOMContentLoaded', function () {
             previewImage(inp);
         }
     });
-
     // Urgency chip JS highlight (for browsers without :has() support)
     document.querySelectorAll('.urgency-chip input[type="radio"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
@@ -388,14 +351,12 @@ window.addEventListener('DOMContentLoaded', function () {
             if (this.checked) { this.closest('.urgency-chip').classList.add('chip-active'); }
         });
     });
-
     // Submit button state
     document.getElementById('manualReportForm').addEventListener('submit', function () {
         document.getElementById('submitLabel').textContent = 'Submitting\u2026';
         document.getElementById('submitBtn').disabled = true;
     });
 });
-
 function previewImage(input) {
     var file = input.files[0];
     if (!file) { return; }
@@ -408,7 +369,6 @@ function previewImage(input) {
     };
     reader.readAsDataURL(file);
 }
-
 function clearImage(e) {
     e.stopPropagation();
     var inp = document.getElementById('image');

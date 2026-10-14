@@ -3,7 +3,6 @@ from unittest.mock import patch
 from app import app as flask_app
 import routes.auth as auth_module
 
-
 def test_login_logs_activity_before_db_closes():
     class FakeCursor:
         def execute(self, *args, **kwargs):
@@ -57,7 +56,6 @@ def test_login_logs_activity_before_db_closes():
     assert captured["db_closed"] is False
     assert captured["actor_id"] == 7
     assert captured["action"] == "login"
-
 
 def test_technician_login_redirects_to_technician_dashboard():
     class FakeCursor:

@@ -31,10 +31,8 @@ app.config["SESSION_COOKIE_SECURE"] = config.SESSION_COOKIE_SECURE
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
 
-# Ensure uploads directory exists on application start
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-# Support reverse proxy headers (Nginx, Apache, Cloudflare, AWS ALB)
 if config.BEHIND_PROXY:
     from werkzeug.middleware.proxy_fix import ProxyFix
     app.wsgi_app = ProxyFix(
@@ -45,7 +43,6 @@ if config.BEHIND_PROXY:
         x_prefix=config.PROXY_FIX_NUM_PROXIES,
     )
 
-# Register Blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(equipment_bp)
@@ -58,8 +55,6 @@ app.register_blueprint(qr_bp)
 app.register_blueprint(scan_bp)
 app.register_blueprint(logbook_bp)
 app.register_blueprint(notifications_bp)
-
-
 
 @app.after_request
 def apply_security_headers(response):
@@ -74,7 +69,6 @@ def apply_security_headers(response):
     elif request.path.startswith("/static/"):
         response.headers["Cache-Control"] = "public, max-age=2592000"
     return response
-
 
 @app.route("/health")
 def health_check():
@@ -111,22 +105,17 @@ def health_check():
         "table_columns": table_columns,
     }), 200
 
-
-
 @app.route("/uploads/<path:filename>")
 def uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
-
 
 @app.template_filter("clean")
 def clean_filter(value):
     return html.escape(str(value)) if value is not None else ""
 
-
 @app.template_filter("basename")
 def basename_filter(value):
     return os.path.basename(str(value)) if value is not None else ""
-
 
 @app.context_processor
 def inject_global():
@@ -150,8 +139,6 @@ def inject_global():
         "status_badge": status_badge,
     }
 
-
-
 @app.errorhandler(400)
 def bad_request_error(e):
     err_msg = getattr(e, "description", "Bad Request.")
@@ -159,7 +146,6 @@ def bad_request_error(e):
     if user:
         return render_template("error.html", code=400, title="Bad Request", message=f"Request error: {err_msg}", user=user), 400
     return render_template("login.html", error=f"Request error: {err_msg}"), 400
-
 
 @app.errorhandler(403)
 def forbidden_error(e):
@@ -174,7 +160,6 @@ def forbidden_error(e):
         ), 403
     return redirect(url_for("auth.login", next=request.path))
 
-
 @app.errorhandler(404)
 def not_found_error(e):
     user = session.get("user")
@@ -187,7 +172,6 @@ def not_found_error(e):
             user=user
         ), 404
     return render_template("login.html", error="The requested page was not found."), 404
-
 
 @app.errorhandler(500)
 def internal_server_error(e):
@@ -204,7 +188,6 @@ def internal_server_error(e):
             user=user
         ), 500
     return render_template("login.html", error=f"A server error occurred: {orig_err}"), 500
-
 
 if __name__ == "__main__":
     app.run(host=config.HOST, debug=config.DEBUG, port=config.PORT)

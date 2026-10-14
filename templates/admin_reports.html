@@ -5,7 +5,6 @@
 .doc-header-wrap {
     display: none;
 }
-
 /* Formal Document Box styling */
 .doc-section {
     margin-bottom: 28px;
@@ -39,12 +38,10 @@
     border-radius: var(--radius);
     font-size: 0.8rem;
 }
-
 /* Document Certification Block */
 .doc-sign-block {
     display: none;
 }
-
 /* Document Preview Mode Floating Banner (Screen only) */
 .doc-preview-bar {
     display: none;
@@ -63,7 +60,6 @@
 body.doc-preview-active .doc-preview-bar {
     display: flex !important;
 }
-
 /* On-Screen Document Format Simulation */
 body.doc-preview-active {
     background: #475569 !important;
@@ -258,7 +254,6 @@ body.doc-preview-active .stat-card {
 body.doc-preview-active .stat-card::before {
     display: none !important;
 }
-
 /* ════════════════════════════════════════════════════════════
    DOCUMENT PRINT STYLES (@media print)
    Formats report as an official institutional document (A4/Letter)
@@ -268,13 +263,11 @@ body.doc-preview-active .stat-card::before {
         size: A4 portrait;
         margin: 8mm 10mm 10mm 10mm;
     }
-
     /* Hide web navigation, dark switches, action bars, and preview bar */
     .topbar, .site-footer, .no-print, .btn, .btn-row, button, input[type="search"],
     .app-sidebar, .app-topbar, .sidebar-backdrop, .doc-preview-bar {
         display: none !important;
     }
-
     /* Suppress browser scrollbars completely on printed pages */
     html, body {
         background: #ffffff !important;
@@ -292,13 +285,11 @@ body.doc-preview-active .stat-card::before {
         width: 100% !important;
         max-width: 100% !important;
     }
-
     ::-webkit-scrollbar {
         display: none !important;
         width: 0 !important;
         height: 0 !important;
     }
-
     /* Reset app layout flex/fixed height containers that cause clipping and scrollbars */
     .app-layout, .app-main, .container {
         display: block !important;
@@ -316,7 +307,6 @@ body.doc-preview-active .stat-card::before {
         float: none !important;
         box-shadow: none !important;
     }
-
     .card {
         background: #ffffff !important;
         border: none !important;
@@ -325,7 +315,6 @@ body.doc-preview-active .stat-card::before {
         margin: 0 0 14pt 0 !important;
         page-break-inside: auto !important;
     }
-
     /* Institutional Letterhead Header */
     .doc-header-wrap {
         display: block !important;
@@ -381,7 +370,6 @@ body.doc-preview-active .stat-card::before {
         color: #333333 !important;
         margin: 1pt 0 0 0 !important;
     }
-
     /* Document Identification Block */
     .doc-title-box {
         text-align: center !important;
@@ -400,7 +388,6 @@ body.doc-preview-active .stat-card::before {
         color: #555555 !important;
         margin: 0 !important;
     }
-
     .doc-meta-table {
         width: 100% !important;
         border-collapse: collapse !important;
@@ -415,7 +402,6 @@ body.doc-preview-active .stat-card::before {
     .doc-meta-table strong {
         font-weight: 700 !important;
     }
-
     /* Section Headings */
     .doc-section {
         margin-bottom: 16pt !important;
@@ -435,7 +421,6 @@ body.doc-preview-active .stat-card::before {
         color: #ffffff !important;
         font-size: 7pt !important;
     }
-
     /* KPI Stat Grid in Print */
     .grid {
         display: grid !important;
@@ -447,7 +432,6 @@ body.doc-preview-active .stat-card::before {
     .grid.grid-3-col {
         grid-template-columns: repeat(3, 1fr) !important;
     }
-
     /* Important: Section 5.0 and Section 6.0 tables must stack cleanly and NEVER overlap */
     .report-tables-grid {
         display: block !important;
@@ -459,7 +443,6 @@ body.doc-preview-active .stat-card::before {
         margin-bottom: 12pt !important;
         page-break-inside: avoid !important;
     }
-
     .stat-card {
         border: 1pt solid #000000 !important;
         background: #ffffff !important;
@@ -486,7 +469,6 @@ body.doc-preview-active .stat-card::before {
         color: #444444 !important;
         margin: 2pt 0 0 0 !important;
     }
-
     /* Tables in Print: never exceed container, no hard min-width, wrap cells */
     .table-wrap {
         border: none !important;
@@ -535,7 +517,6 @@ body.doc-preview-active .stat-card::before {
     tbody tr:nth-child(even) td {
         background: #fafafa !important;
     }
-
     /* Section 7.0 Detailed Audit Trail: explicit column widths and fixed layout */
     .audit-trail-table {
         table-layout: fixed !important;
@@ -546,7 +527,6 @@ body.doc-preview-active .stat-card::before {
         padding: 2.5pt 3pt !important;
         vertical-align: top !important;
     }
-
     .badge-success, .badge-warning, .badge-danger, .badge-info, .badge {
         border: 0.5pt solid #666666 !important;
         padding: 1pt 3pt !important;
@@ -555,7 +535,6 @@ body.doc-preview-active .stat-card::before {
         color: #000000 !important;
         font-weight: 600 !important;
     }
-
     /* Document Certification & Sign-off Block */
     .doc-sign-block {
         display: block !important;
@@ -592,10 +571,7 @@ body.doc-preview-active .stat-card::before {
 }
 </style>
 {% endblock %}
-
 {% block content %}
-
-<!-- Floating preview control bar (Screen only when preview active) -->
 <div class="doc-preview-bar no-print" id="docPreviewBar">
     <div style="display:flex;align-items:center;gap:12px;">
         <span style="font-weight:700;font-size:0.95rem;letter-spacing:-0.01em;">Document Print Preview Mode</span>
@@ -611,10 +587,6 @@ body.doc-preview-active .stat-card::before {
         </button>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     DOCUMENT HEADER: OFFICIAL LETTERHEAD (Document Type)
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-header-wrap">
     <div class="doc-letterhead">
         <img class="doc-logo-img" src="{{ url_for('static', filename='logo.png') }}" alt="NEUST Logo">
@@ -626,13 +598,10 @@ body.doc-preview-active .stat-card::before {
             <p class="doc-lh-unit">Equipment Diagnostics, Maintenance &amp; Technical Services Unit</p>
         </div>
     </div>
-    
     <div class="doc-title-box">
         <h2>Equipment Maintenance &amp; Analytical Report</h2>
         <p>Laboratory Equipment Performance, Technician Workload &amp; Maintenance Summary</p>
     </div>
-
-    <!-- Administrative Control Information -->
     <table class="doc-meta-table">
         <tr>
             <td style="width:25%;"><strong>Document Ref:</strong> {{ doc_metadata.ref_no }}</td>
@@ -648,10 +617,6 @@ body.doc-preview-active .stat-card::before {
         </tr>
     </table>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     INTERACTIVE SCREEN FILTER & ACTION CONTROLS (no-print)
-     ════════════════════════════════════════════════════════════════ -->
 <div class="card no-print">
     <div class="card-header">
         <div>
@@ -737,8 +702,6 @@ body.doc-preview-active .stat-card::before {
         <div style="grid-column: 1 / -1; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <button type="submit" class="btn">Apply Filter</button>
             <a href="{{ url_for('reports.index') }}" class="btn secondary">Reset Filters</a>
-            
-            <!-- Quick Laboratory Selector Jump Pills -->
             <div style="display:flex;gap:6px;align-items:center;margin-left:auto;flex-wrap:wrap;">
                 <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Quick Lab Filter:</span>
                 <a href="{{ url_for('reports.index', lab='', time_window=time_window) }}" class="badge {{ 'badge-info' if not lab else '' }}" style="text-decoration:none;cursor:pointer;padding:4px 9px;">All Labs</a>
@@ -749,10 +712,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </form>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 1.0: SUMMARY OVERVIEW
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">1.0</span>
@@ -782,18 +741,12 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 2.0: MONTHLY REPAIRS SUMMARY
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">2.0</span>
         Monthly Repairs Summary
     </div>
     <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Shows the total repair requests reported and completed across each calendar month.</p>
-
-    <!-- Monthly Trend Chart (Screen View) -->
     <div class="card no-print" style="margin-bottom:16px;">
         <div class="card-header">
             <h2>Monthly Requests Overview</h2>
@@ -801,8 +754,6 @@ body.doc-preview-active .stat-card::before {
         </div>
         <canvas id="monthChart" style="max-height: 240px;"></canvas>
     </div>
-
-    <!-- Official Monthly Breakdown Table (Screen & Print Document) -->
     <div class="table-wrap">
         <table>
             <thead>
@@ -841,10 +792,6 @@ body.doc-preview-active .stat-card::before {
         </table>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 3.0: COMPUTER LABORATORY STATUS
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">3.0</span>
@@ -855,9 +802,7 @@ body.doc-preview-active .stat-card::before {
         {% endif %}
     </div>
     <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Overview of working, under-repair, and damaged computers across CICT computer laboratories.</p>
-
     {% if lab_stats %}
-    <!-- Specific Laboratory Status Dashboard -->
     <div style="margin-bottom: 20px;">
         <div class="grid" style="margin-bottom: 16px;">
             <div class="stat-card">
@@ -881,8 +826,6 @@ body.doc-preview-active .stat-card::before {
                 <p>Reported broken or defective</p>
             </div>
         </div>
-
-        <!-- All Items Stationed in this Lab -->
         <h3 style="font-size:0.95rem;font-weight:800;margin:18px 0 10px;color:var(--text);display:flex;align-items:center;justify-content:space-between;">
             <span>Equipment Stationed in {{ lab_stats.name }} ({{ lab_stats.total }} Items)</span>
             <span style="font-size:0.8rem;font-weight:500;color:var(--text-muted);">Lab Equipment List</span>
@@ -932,8 +875,6 @@ body.doc-preview-active .stat-card::before {
                 </tbody>
             </table>
         </div>
-
-        <!-- Maintenance History for this specific lab -->
         {% if lab_history %}
         <h3 style="font-size:0.95rem;font-weight:800;margin:24px 0 10px;color:var(--text);">
             Repair History for {{ lab_stats.name }}
@@ -966,9 +907,7 @@ body.doc-preview-active .stat-card::before {
         </div>
         {% endif %}
     </div>
-
     {% else %}
-    <!-- Comparative Overview of All Laboratories -->
     <div class="table-wrap">
         <table class="doc-table">
             <thead>
@@ -1013,10 +952,6 @@ body.doc-preview-active .stat-card::before {
     </div>
     {% endif %}
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 4.0: EQUIPMENT NEEDING FREQUENT REPAIR
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div>
@@ -1035,8 +970,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
     <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Identifies computers and peripherals with 2 or more repairs so staff know which items may need replacement parts.</p>
-
-    <!-- Analytics KPI Cards -->
     <div class="grid grid-3-col" style="margin-bottom: 18px;">
         <div class="stat-card">
             <h3>Equipment with 2+ Breakdowns</h3>
@@ -1060,8 +993,6 @@ body.doc-preview-active .stat-card::before {
             <p>{{ component_failures[0].failure_count if component_failures else 0 }} repair reports logged</p>
         </div>
     </div>
-
-    <!-- Problematic Hardware Devices Table -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text); display:flex; justify-content:space-between; align-items:center;">
         <span>Equipment with Multiple Repair Records</span>
         <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Filter: {{ time_window }} days &middot; 2 or more repairs</span>
@@ -1120,8 +1051,6 @@ body.doc-preview-active .stat-card::before {
             </tbody>
         </table>
     </div>
-
-    <!-- Component Failure Patterns Breakdown -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text);">
         Frequently Broken Hardware Parts (Mouse, Keyboard, RAM, etc.)
     </h4>
@@ -1152,10 +1081,6 @@ body.doc-preview-active .stat-card::before {
         </table>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 5.0: TECHNICIAN PERFORMANCE & WORKLOAD
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div>
@@ -1175,8 +1100,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
     <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Shows repairs assigned to each technician, their completed jobs, and average time to fix equipment.</p>
-
-    <!-- Dedicated Individual Technician Report (When a technician is selected) -->
     {% if individual_tech_report %}
     <div class="card" style="margin-bottom:24px; border:2px solid var(--primary); background:rgba(21,71,160,0.02); padding:18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:16px;">
@@ -1193,7 +1116,6 @@ body.doc-preview-active .stat-card::before {
                 </a>
             </div>
         </div>
-
         <div class="grid" style="margin-bottom:18px;">
             <div class="stat-card">
                 <h3>Total Assigned Requests</h3>
@@ -1216,9 +1138,7 @@ body.doc-preview-active .stat-card::before {
                 <p>Total time spent: {{ individual_tech_report.total_duration_str }}</p>
             </div>
         </div>
-
         <div class="grid report-tables-grid" style="align-items:start; margin-bottom:18px;">
-            <!-- Monthly Assigned vs Completed for this Technician -->
             <div>
                 <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Monthly Repairs Handled</h4>
                 <div class="table-wrap">
@@ -1252,8 +1172,6 @@ body.doc-preview-active .stat-card::before {
                     </table>
                 </div>
             </div>
-
-            <!-- Laboratory Distribution for this Technician -->
             <div>
                 <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Repairs by Computer Lab</h4>
                 <div class="table-wrap">
@@ -1280,8 +1198,6 @@ body.doc-preview-active .stat-card::before {
                 </div>
             </div>
         </div>
-
-        <!-- Individual Detailed Repair Logs -->
         <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Repair Log History for {{ individual_tech_report.technician.name|clean }}</h4>
         <div class="table-wrap">
             <table style="font-size:0.83rem;">
@@ -1329,8 +1245,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
     {% endif %}
-    
-    <!-- All Technicians Summary Performance Table -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text); display:flex; justify-content:space-between; align-items:center;">
         <span>All Technicians Summary</span>
         <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Workload assigned vs. completed for all technicians</span>
@@ -1390,11 +1304,8 @@ body.doc-preview-active .stat-card::before {
             </tbody>
         </table>
     </div>
-
-    <!-- Detailed List of Fixed Equipment per Technician -->
     <div style="margin-top:16px;">
         <h4 style="font-size:0.92rem;font-weight:700;margin-bottom:8px;color:var(--text);">Equipment Fixed by Each Technician</h4>
-        
         {% for t in tech_stats %}
         <div class="card" style="margin-bottom:12px;padding:14px 18px;">
             <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:10px;">
@@ -1403,7 +1314,6 @@ body.doc-preview-active .stat-card::before {
                 </h5>
                 <span style="font-size:0.8rem;color:var(--text-muted);">Average Time to Fix: <strong>{{ t.avg_fix_str }}</strong></span>
             </div>
-            
             {% if t.fixed_items %}
             <div class="table-wrap">
                 <table style="font-size:0.82rem;">
@@ -1445,10 +1355,6 @@ body.doc-preview-active .stat-card::before {
         {% endfor %}
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 6.0: MOST COMMON EQUIPMENT ISSUES & CATEGORIES
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">6.0</span>
@@ -1484,7 +1390,6 @@ body.doc-preview-active .stat-card::before {
                 </table>
             </div>
         </div>
-
         <div class="card">
             <div class="card-header">
                 <h2>Repairs by Equipment Category</h2>
@@ -1513,10 +1418,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 7.0: COMPLETE MAINTENANCE LOG HISTORY
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">7.0</span>
@@ -1585,10 +1486,6 @@ body.doc-preview-active .stat-card::before {
         </table>
     </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SECTION 8.0: REPORT VERIFICATION & SIGNATURES (Print View)
-     ════════════════════════════════════════════════════════════════ -->
 <div class="doc-sign-block">
     <div style="font-size:9pt;font-weight:700;text-transform:uppercase;margin-bottom:12pt;border-bottom:1pt solid #000;padding-bottom:3pt;">
         8.0 Report Verification &amp; Signatures
@@ -1614,7 +1511,6 @@ body.doc-preview-active .stat-card::before {
         </div>
     </div>
 </div>
-
 <script>
 function toggleDocumentPreview() {
     const isPreview = document.body.classList.toggle('doc-preview-active');
@@ -1628,7 +1524,6 @@ function toggleDocumentPreview() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
-
 document.addEventListener("DOMContentLoaded", () => {
     const ctx = document.getElementById('monthChart');
     if (ctx) {

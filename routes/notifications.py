@@ -3,7 +3,6 @@ from models import get_db, oid, format_date
 
 notifications_bp = Blueprint("notifications", __name__, url_prefix="/notifications")
 
-
 @notifications_bp.route("/api/unread", methods=["GET"])
 def get_unread():
     user = session.get("user")
@@ -44,7 +43,6 @@ def get_unread():
     finally:
         db.close()
 
-
 @notifications_bp.route("/api/read/<int:notif_id>", methods=["POST"])
 def mark_read(notif_id):
     user = session.get("user")
@@ -64,7 +62,6 @@ def mark_read(notif_id):
         return jsonify({"success": True})
     finally:
         db.close()
-
 
 @notifications_bp.route("/api/read-all", methods=["POST"])
 def mark_all_read():

@@ -6,7 +6,6 @@ import routes.equipment as equipment_module
 import routes.requests as requests_module
 import routes.notifications as notif_module
 
-
 def _set_session(client, role="admin", user_id=1, user_name=None):
     with client.session_transaction() as session:
         session["user"] = {
@@ -17,7 +16,6 @@ def _set_session(client, role="admin", user_id=1, user_name=None):
         }
         session["last_activity"] = "9999999999"
         session["_csrf_token"] = "valid-token-for-test-xyz"
-
 
 class TestAdminAndManagement(unittest.TestCase):
     def test_admin_cannot_delete_own_account(self):
@@ -31,7 +29,6 @@ class TestAdminAndManagement(unittest.TestCase):
             )
             self.assertEqual(response.status_code, 302)
             self.assertIn("/user_management", response.headers.get("Location", ""))
-
 
     def test_equipment_delete_endpoint_requires_csrf(self):
         flask_app.config.update(TESTING=True)

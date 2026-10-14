@@ -6,13 +6,11 @@ import re
 cj = http.cookiejar.CookieJar()
 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
 
-# 1. Fetch login page
 resp = opener.open('http://127.0.0.1:5000/login')
 html = resp.read().decode('utf-8')
 token_match = re.search(r'name="csrf_token"\s+value="([^"]+)"', html)
 token = token_match.group(1) if token_match else ''
 
-# 2. Login as technician@school.edu
 login_data = urllib.parse.urlencode({
     'email': 'technician@school.edu',
     'password': 'technician123',
@@ -22,7 +20,6 @@ login_data = urllib.parse.urlencode({
 req = urllib.request.Request('http://127.0.0.1:5000/login', data=login_data)
 login_resp = opener.open(req)
 
-# 3. Access /maintenance_requests/
 req_page = opener.open('http://127.0.0.1:5000/maintenance_requests/')
 page_html = req_page.read().decode('utf-8')
 

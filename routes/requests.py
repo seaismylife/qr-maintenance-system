@@ -13,7 +13,6 @@ ALLOWED_REQUEST_STATUSES = {
     "Rejected",
 }
 
-
 @requests_bp.route("/assign/<int:request_id>", methods=["POST"])
 @role_required("admin")
 @csrf_protect
@@ -59,7 +58,6 @@ def assign_technician(request_id):
         db.close()
     return redirect(url_for("requests.index"))
 
-
 @requests_bp.route("/", methods=["GET", "POST"])
 @role_required("technician", "admin")
 @csrf_protect
@@ -81,7 +79,6 @@ def index():
             logged_user = session.get("user", {})
             user_role = logged_user.get("role")
 
-            # Technicians cannot mark Resolved directly; their completion step is 'Completed - Pending Verification'
             if user_role == "technician" and status in ("Resolved", "Completed - Pending Verification"):
                 action = (request.form.get("action_taken") or "").strip()
                 if not action:
@@ -89,7 +86,6 @@ def index():
                     return redirect(url_for("requests.index", error="action_required"))
                 status = "Completed - Pending Verification"
 
-            # Validate action_taken is required when resolving
             if status == "Resolved":
                 action = (request.form.get("action_taken") or "").strip()
                 if not action:
@@ -104,7 +100,6 @@ def index():
 
             now_time = now_utc().replace(tzinfo=None)
 
-            # Retrieve request and equipment details
             cur.execute(
                 "SELECT r.*, e.name AS equipment_name, u.name AS reporter_name "
                 "FROM maintenance_requests r "
@@ -119,15 +114,11 @@ def index():
             reported_by = req_doc.get("reported_by")
             tech_id = req_doc.get("technician_id")
 
-            # Authorization guard:
-            # Technicians can ONLY update tasks that have been assigned to them by Admin.
-            # Unassigned tasks or tasks assigned to other technicians cannot be modified.
             if user_role == "technician":
                 if not tech_id or oid(tech_id) != oid(logged_user.get("id")):
                     cur.close()
                     abort(403)
 
-            # If admin also selected technician in this form
             if user_role == "admin" and "technician_id" in request.form:
                 tech_val = (request.form.get("technician_id") or "").strip()
                 new_tech_id = oid(tech_val) if tech_val else None
@@ -151,7 +142,6 @@ def index():
                 if eq_id:
                     cur.execute("UPDATE equipment SET status='Under Repair' WHERE id=%s", (eq_id,))
 
-                # If Admin returned it for rework from Completed - Pending Verification
                 if user_role == "admin" and prev_status == "Completed - Pending Verification" and tech_id:
                     from models.db import create_notification
                     revision_msg = f"Admin requested rework on '{equipment_name}'."
@@ -165,7 +155,6 @@ def index():
                     (status, action, now_time, req_oid),
                 )
                 from models.db import create_notification
-                # Notify all Admins that repair is completed and awaits verification
                 cur.execute("SELECT id FROM users WHERE role='admin' AND (is_deleted IS NULL OR is_deleted=0)")
                 admin_rows = cur.fetchall()
                 tech_display = logged_user.get("name") or "Technician"
@@ -176,7 +165,6 @@ def index():
                         f"Technician {tech_display} completed repair on '{equipment_name}'. Awaiting your verification.",
                         url_for("requests.index")
                     )
-                # Inform reporting faculty member that repair is completed and under verification
                 if reported_by:
                     create_notification(
                         db,
@@ -193,7 +181,6 @@ def index():
                 eq_id = req_doc.get("equipment_id")
                 start_time = req_doc.get("repair_start") or req_doc.get("date_reported") or now_time
 
-                # Calculate duration in minutes
                 try:
                     delta_seconds = (now_time - start_time).total_seconds()
                     duration_minutes = max(1, int(round(delta_seconds / 60.0)))
@@ -213,7 +200,6 @@ def index():
                     )
 
                 from models.db import create_notification
-                # Notify reporting faculty member that repair was verified and resolved by Admin
                 if reported_by:
                     create_notification(
                         db,
@@ -221,7 +207,6 @@ def index():
                         f"Your request for '{equipment_name}' was verified and resolved by Admin. Equipment is now working.",
                         url_for("my_req.index")
                     )
-                # Notify assigned technician that repair was approved
                 if tech_id and tech_id != logged_user.get("id"):
                     create_notification(
                         db,

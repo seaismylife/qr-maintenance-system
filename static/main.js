@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     
     htmlElement.setAttribute('data-theme', currentTheme);
-    // Theme checkbox toggle event
     if (themeCheckbox) {
         themeCheckbox.checked = currentTheme === 'dark';
         themeCheckbox.addEventListener('change', (e) => {
@@ -32,7 +31,6 @@ function resetMobileScroll() {
 
 window.addEventListener('pageshow', resetMobileScroll);
 
-// Notifications Logic & Real-Time Polling
 function toggleNotifDropdown() {
     const dropdown = document.getElementById('notifDropdown');
     const backdrop = document.getElementById('notifBackdrop');
@@ -44,7 +42,6 @@ function toggleNotifDropdown() {
     }
 }
 
-// Close notification dropdown when clicking outside
 document.addEventListener('click', (e) => {
     const wrapper = document.querySelector('.notif-wrapper');
     const dropdown = document.getElementById('notifDropdown');
@@ -131,15 +128,12 @@ function toggleSidebar() {
     }
 }
 
-// ─── Real-Time Live Clock & Dynamic Time Displays ───
 function updateLiveClock() {
     const now = new Date();
     
-    // Format date: "Mon, Oct 12, 2026"
     const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', dateOptions);
     
-    // Format time: "09:58:32 PM"
     const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
     const timeStr = now.toLocaleTimeString('en-US', timeOptions);
 
@@ -148,7 +142,6 @@ function updateLiveClock() {
     if (dateEl) dateEl.textContent = dateStr;
     if (timeEl) timeEl.textContent = timeStr;
 
-    // Elements across pages requesting real-time clock
     const clocks = document.querySelectorAll('.live-realtime-clock');
     clocks.forEach(el => {
         el.textContent = `${dateStr} • ${timeStr}`;

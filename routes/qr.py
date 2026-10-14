@@ -6,7 +6,6 @@ from routes.decorators import role_required
 
 qr_bp = Blueprint("qr", __name__, url_prefix="/qr")
 
-
 @qr_bp.route("/download")
 @qr_bp.route("/download/")
 @qr_bp.route("/download/<equipment_id>")
@@ -63,7 +62,6 @@ def download(equipment_id=None):
 
     return redirect(qr_url)
 
-
 @qr_bp.route("/print")
 @role_required("custodian", "technician", "admin", "faculty")
 def print_sheet():
@@ -92,7 +90,6 @@ def print_sheet():
         cur.execute(base_sql, tuple(params))
         equipment = cur.fetchall() or []
 
-        # Auto-generate QR codes for any items missing one
         from routes.equipment import equipment_scan_public_url, _make_qr_image_url
         needs_commit = False
         for eq in equipment:

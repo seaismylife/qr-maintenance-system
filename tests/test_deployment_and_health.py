@@ -4,7 +4,6 @@ from unittest.mock import patch, MagicMock
 from app import app as flask_app
 import config
 
-
 class TestDeploymentAndHealth(unittest.TestCase):
     def setUp(self):
         flask_app.config.update(TESTING=True)
@@ -25,7 +24,6 @@ class TestDeploymentAndHealth(unittest.TestCase):
         self.assertEqual(data.get("status"), "healthy")
         self.assertEqual(data.get("database"), "connected")
         self.assertIn("version", data)
-
 
     def test_security_headers_present(self):
         """Verify essential security headers are applied to responses."""

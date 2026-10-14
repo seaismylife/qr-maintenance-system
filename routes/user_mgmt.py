@@ -9,7 +9,6 @@ from models.security import validate_user_payload, normalize_text, csrf_protect
 
 user_mgmt_bp = Blueprint("user_mgmt", __name__, url_prefix="/user_management")
 
-
 @user_mgmt_bp.route("/", methods=["GET", "POST"])
 @role_required("admin")
 @csrf_protect
@@ -53,7 +52,6 @@ def index():
             flash("User created successfully.", "success")
             return redirect(url_for("user_mgmt.index"))
 
-        # Fallback query parameter deletion/archival
         if "delete" in request.args or "archive" in request.args:
             uid = oid(request.args.get("archive") or request.args.get("delete"))
             admin_id = oid(session.get("user", {}).get("id"))
@@ -81,7 +79,6 @@ def index():
         )
     finally:
         db.close()
-
 
 @user_mgmt_bp.route("/delete/<int:user_id>", methods=["POST"], endpoint="delete_user")
 @user_mgmt_bp.route("/archive/<int:user_id>", methods=["POST"], endpoint="archive_user")
@@ -115,7 +112,6 @@ def delete_user(user_id):
         db.close()
     return redirect(url_for("user_mgmt.index"))
 
-
 @user_mgmt_bp.route("/backup")
 @role_required("admin")
 def backup_db():
@@ -137,7 +133,6 @@ def backup_db():
     except Exception as exc:
         flash(f"Database backup failed: {exc}", "error")
         return redirect(url_for("user_mgmt.index"))
-
 
 @user_mgmt_bp.route("/restore", methods=["POST"])
 @role_required("admin")

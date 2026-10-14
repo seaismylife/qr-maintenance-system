@@ -49,7 +49,6 @@
             <button type="submit" class="btn">{{ 'Update Equipment' if edit_doc else 'Add Equipment' }}</button>
         </div>
     </form>
-
     <div style="margin-top:18px; padding:14px 18px; background:rgba(21,71,160,0.05); border:1px solid rgba(21,71,160,0.15); border-radius:10px; font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
         <strong style="color:var(--text); display:block; margin-bottom:6px;">Category Guide</strong>
         <strong>Desktop Workstation</strong> — Covers full set: PC, Monitor, Keyboard, Mouse, AVR<br>
@@ -59,7 +58,6 @@
     </div>
 </div>
 {% endif %}
-
 <div class="card">
     <div class="card-header">
         <h2>Institutional Equipment Inventory ({{ rows|length }})</h2>
@@ -105,7 +103,6 @@
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                         Print QR
                     </a>
-
                     {% if user and user.role in ['admin', 'custodian'] %}
                     <a class="btn secondary btn-sm" href="{{ url_for('equipment.index', edit=(row.id or row._id)|string) }}">Edit</a>
                     <form method="post" action="{{ url_for('equipment.delete_equipment', equipment_id=(row.id or row._id)) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to archive equipment \'{{ row.name|clean }}\'?');">

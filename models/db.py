@@ -10,7 +10,6 @@ import config
 _pool = None
 _initialized = False
 
-
 def get_db():
     global _pool, _initialized
     conn_kwargs = {
@@ -224,7 +223,6 @@ def get_db():
         except Exception:
             pass
 
-        # Performance indexes for frequent queries, joins, and filtering
         indexes_to_ensure = [
             ("users", "idx_users_role", "role"),
             ("equipment", "idx_equipment_status", "status"),
@@ -256,17 +254,14 @@ def get_db():
 
     return cnx
 
-
 def oid(val):
     try:
         return int(str(val).strip()) if val not in (None, "") else None
     except Exception:
         return None
 
-
 def now_utc() -> datetime:
     return datetime.now(timezone.utc)
-
 
 def create_notification(db, user_id, message, link="#"):
     cur = db.cursor()
@@ -277,7 +272,6 @@ def create_notification(db, user_id, message, link="#"):
     db.commit()
     cur.close()
 
-
 def log_activity(db, actor_id, action, details=None, target_type=None, target_id=None):
     cur = db.cursor()
     cur.execute(
@@ -286,7 +280,6 @@ def log_activity(db, actor_id, action, details=None, target_type=None, target_id
     )
     db.commit()
     cur.close()
-
 
 def _find_mysql_binary(binary_name: str) -> str | None:
     found = shutil.which(binary_name)
@@ -312,13 +305,11 @@ def _find_mysql_binary(binary_name: str) -> str | None:
             return path
     return None
 
-
 def backup_database(output_path):
     output_dir = Path(output_path).parent
     output_dir.mkdir(parents=True, exist_ok=True)
     db_name = config.MYSQL_DB
 
-    # 1. Try using mysqldump CLI binary if present
     dump_bin = _find_mysql_binary("mysqldump")
     if dump_bin:
         try:
@@ -336,9 +327,8 @@ def backup_database(output_path):
                 subprocess.run(cmd, check=True, stdout=handle)
             return output_path
         except Exception:
-            pass  # Fall through to pure Python dump
+            pass
 
-    # 2. Pure Python dump fallback using MySQL connection
     db = get_db()
     try:
         cur = db.cursor()
@@ -401,9 +391,7 @@ def backup_database(output_path):
     finally:
         db.close()
 
-
 def restore_database(sql_text: str):
-    # 1. Try mysql CLI binary if available
     mysql_bin = _find_mysql_binary("mysql")
     if mysql_bin:
         try:
@@ -419,9 +407,8 @@ def restore_database(sql_text: str):
             subprocess.run(cmd, input=sql_text, text=True, check=True)
             return True
         except Exception:
-            pass  # Fall through to pure Python restore
+            pass
 
-    # 2. Pure Python restore fallback
     db = get_db()
     try:
         cur = db.cursor()
@@ -435,13 +422,11 @@ def restore_database(sql_text: str):
     finally:
         db.close()
 
-
 def peso(amount) -> str:
     try:
         return f"₱{float(amount):,.2f}"
     except Exception:
         return "₱0.00"
-
 
 def status_badge(status: str) -> str:
     mapping = {
@@ -458,7 +443,6 @@ def status_badge(status: str) -> str:
         "Rejected": "badge-danger",
     }
     return mapping.get(status, "badge-info")
-
 
 def format_duration_minutes(minutes) -> str:
     if minutes is None:
@@ -477,7 +461,6 @@ def format_duration_minutes(minutes) -> str:
         return f"{mins}m"
     else:
         return "< 1m"
-
 
 def format_date(val) -> str:
     if val is None:

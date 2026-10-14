@@ -8,20 +8,16 @@ from models.security import validate_equipment_payload, normalize_text, csrf_pro
 
 equipment_bp = Blueprint("equipment", __name__, url_prefix="/equipment")
 
-
 def _public_base(request) -> str:
     if config.PUBLIC_BASE_URL:
         return config.PUBLIC_BASE_URL
     return request.url_root.rstrip("/")
 
-
 def equipment_scan_path(equipment_id: str) -> str:
     return f"/equipment/scan/{equipment_id}"
 
-
 def equipment_scan_public_url(equipment_id: str, request) -> str:
     return _public_base(request) + equipment_scan_path(str(equipment_id))
-
 
 def _make_qr_image_url(scan_page_url: str) -> str:
     return (
@@ -29,11 +25,9 @@ def _make_qr_image_url(scan_page_url: str) -> str:
         + urllib.parse.quote(scan_page_url, safe="")
     )
 
-
 def _load_equipment(cur, eq_oid):
     cur.execute("SELECT * FROM equipment WHERE id=%s AND (is_deleted IS NULL OR is_deleted=0)", (eq_oid,))
     return cur.fetchone()
-
 
 @equipment_bp.route("/", methods=["GET", "POST"])
 @role_required("custodian", "technician", "admin")
@@ -91,7 +85,6 @@ def index():
             cur.close()
             return redirect(url_for("equipment.index"))
 
-        # Fallback query parameter deletion (guarded by role_required)
         if "delete" in request.args or "archive" in request.args:
             if user_role not in ("admin", "custodian"):
                 abort(403, "Technicians cannot archive equipment.")
@@ -124,7 +117,6 @@ def index():
     finally:
         db.close()
 
-
 @equipment_bp.route("/delete/<int:equipment_id>", methods=["POST"], endpoint="delete")
 @equipment_bp.route("/delete_equipment/<int:equipment_id>", methods=["POST"], endpoint="delete_equipment")
 @equipment_bp.route("/archive/<int:equipment_id>", methods=["POST"], endpoint="archive")
@@ -144,7 +136,6 @@ def delete_equipment(equipment_id):
     finally:
         db.close()
     return redirect(url_for("equipment.index"))
-
 
 @equipment_bp.route("/scan/<equipment_id>", methods=["GET", "POST"])
 @csrf_protect

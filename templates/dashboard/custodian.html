@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
 <div class="grid" style="margin-bottom:24px;">
     <div class="stat-card">
         <h3>Total Equipment Stocks</h3>
@@ -24,7 +23,6 @@
         {% endfor %}
     </div>
 </div>
-
 <div class="card">
     <div class="card-header">
         <h2>Supply Officer Quick Actions</h2>
@@ -44,7 +42,6 @@
         </a>
     </div>
 </div>
-
 <div class="card">
     <div class="card-header">
         <div>
@@ -60,14 +57,12 @@
         </div>
         {% endif %}
     </div>
-
     {% if without_qr %}
     <div class="alert" style="background:var(--bg-accent);color:var(--text);border-left:4px solid var(--warning);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;font-size:0.88rem;">
         <strong>{{ without_qr|length }} item{% if without_qr|length > 1 %}s{% endif %}</strong> missing a QR code.
         <a href="{{ url_for('equipment.index') }}" style="color:var(--primary);font-weight:600;margin-left:6px;">Edit &amp; save them</a> to auto-generate.
     </div>
     {% endif %}
-
     {% if not with_qr %}
     <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px;display:block;opacity:0.4;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -76,11 +71,9 @@
         <a class="btn" style="margin-top:16px;display:inline-flex;" href="{{ url_for('equipment.index') }}">Add First Equipment</a>
     </div>
     {% else %}
-    
     <div id="qrGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;">
         {% for eq in with_qr %}
         <div class="qr-card-item" style="display:{% if loop.index > 8 %}none{% else %}block{% endif %};background:var(--bg-accent);border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center;">
-            
             <img src="{{ eq.qr_code }}"
                  width="120" height="120"
                  style="display:block;margin:0 auto 10px;border-radius:6px;border:1px solid var(--line);background:#fff;object-fit:contain;"
@@ -126,7 +119,6 @@
     {% endif %}
     {% endif %}
 </div>
-
 <div class="card">
     <div class="card-header">
         <h2>Equipment Overview</h2>
@@ -162,7 +154,6 @@
                            target="_blank"
                            class="btn secondary btn-sm" title="Print QR Label">Print</a>
                     </div>
-
                 {% else %}
                     <a href="{{ url_for('equipment.index', edit=(eq.id or eq._id)|string) }}"
                        class="btn secondary btn-sm">Generate</a>

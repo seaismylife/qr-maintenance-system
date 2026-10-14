@@ -28,7 +28,6 @@
     <img src="{{ equipment.qr_code }}" width="120" height="120" alt="QR code"
          style="border-radius:8px;border:1px solid var(--line);background:#fff;display:block;margin-top:8px;">
     {% endif %}
-
     <div style="margin-top:18px; padding:14px 18px; background:rgba(21,71,160,0.05); border:1px solid rgba(21,71,160,0.15); border-radius:10px; font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
         <strong style="color:var(--text); display:block; margin-bottom:6px;">Category Guide</strong>
         <strong>Desktop Workstation</strong> — Covers full set: PC, Monitor, Keyboard, Mouse, AVR<br>
@@ -37,7 +36,6 @@
         <strong>Peripherals & Office</strong> — Printers, Scanners
     </div>
 </div>
-
 {% if can_edit %}
 <div class="card">
     <div class="card-header"><h2>Edit equipment</h2></div>
@@ -73,7 +71,6 @@
         </div>
         <button type="submit">Save changes</button>
     </form>
-
     <div style="margin-top:18px; padding:14px 18px; background:rgba(21,71,160,0.05); border:1px solid rgba(21,71,160,0.15); border-radius:10px; font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
         <strong style="color:var(--text); display:block; margin-bottom:6px;">Category Guide</strong>
         <strong>Desktop Workstation</strong> — Covers full set: PC, Monitor, Keyboard, Mouse, AVR<br>
@@ -81,7 +78,6 @@
         <strong>Networking & Power</strong> — Routers, Switches, Standalone UPS<br>
         <strong>Peripherals & Office</strong> — Printers, Scanners
     </div>
-
     <div class="btn-row" style="margin-top:12px;">
         <a class="btn secondary" href="{{ url_for('equipment.index') }}">Full equipment list</a>
         <a class="btn secondary" href="{{ url_for('scan.camera') }}">Scan another QR</a>
@@ -106,7 +102,6 @@
             <option value="AVR / Power Supply">AVR / Power Supply</option>
             <option value="Other Component">Other Component</option>
         </select>
-
         <label>Issue description</label>
         <textarea name="description" rows="4" required placeholder="Describe the problem…"></textarea>
         <label>Priority / Urgency Level</label>

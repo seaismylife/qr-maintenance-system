@@ -14,8 +14,8 @@ ALLOWED_EQUIPMENT_STATUSES = {
     "Working",
     "Under Repair",
     "Not Working",
-    "Under Maintenance",  # legacy compatibility
-    "Damaged",            # legacy compatibility
+    "Under Maintenance",
+    "Damaged",
     "In Progress",
     "Resolved",
     "Rejected",
@@ -26,39 +26,32 @@ _FAILED_LOGINS = {}
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_LOCKOUT_SECONDS = 300
 
-
 def normalize_text(value):
     return (value or "").strip()
-
 
 def is_strong_password(password):
     if not isinstance(password, str):
         return False
     return bool(PASSWORD_RE.match(password.strip()))
 
-
 def is_valid_email(email):
     if not isinstance(email, str):
         return False
     return bool(EMAIL_RE.match(email.strip()))
 
-
 def is_valid_role(role):
     return role in ALLOWED_ROLES
-
 
 def generate_csrf_token():
     if "_csrf_token" not in session:
         session["_csrf_token"] = secrets.token_hex(32)
     return session["_csrf_token"]
 
-
 def validate_csrf_token(token):
     session_token = session.get("_csrf_token")
     if not session_token or not token:
         return False
     return hmac.compare_digest(str(session_token), str(token))
-
 
 def csrf_protect(f):
     @wraps(f)
@@ -74,7 +67,6 @@ def csrf_protect(f):
         return f(*args, **kwargs)
     return decorated
 
-
 def record_failed_login(ip):
     now = time.time()
     attempts = _FAILED_LOGINS.get(ip, [])
@@ -82,10 +74,8 @@ def record_failed_login(ip):
     attempts.append(now)
     _FAILED_LOGINS[ip] = attempts
 
-
 def clear_failed_logins(ip):
     _FAILED_LOGINS.pop(ip, None)
-
 
 def is_login_rate_limited(ip):
     now = time.time()
@@ -93,7 +83,6 @@ def is_login_rate_limited(ip):
     recent_attempts = [t for t in attempts if now - t < LOGIN_LOCKOUT_SECONDS]
     _FAILED_LOGINS[ip] = recent_attempts
     return len(recent_attempts) >= LOGIN_MAX_ATTEMPTS
-
 
 def validate_user_payload(name, email, role, password, is_update=False):
     errors = []
@@ -112,7 +101,6 @@ def validate_user_payload(name, email, role, password, is_update=False):
             errors.append("Password must be at least 12 characters long and include uppercase, lowercase, number, and special character.")
     return errors, name, email, role
 
-
 def validate_equipment_payload(name, category, location, status):
     errors = []
     name = normalize_text(name)
@@ -129,7 +117,6 @@ def validate_equipment_payload(name, category, location, status):
     if status and status not in ALLOWED_EQUIPMENT_STATUSES:
         errors.append("Please select a valid equipment status.")
     return errors, name, category, location, status
-
 
 def validate_report_payload(description, urgency):
     errors = []

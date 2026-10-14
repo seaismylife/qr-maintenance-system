@@ -17,7 +17,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root {
   --navy:  #071236;
   --blue:  #1a4fd6;
@@ -30,7 +29,6 @@
   --font:  'Outfit', system-ui, sans-serif;
   --r:     12px;
 }
-
 [data-theme="dark"] {
   --surface: #141f38;
   --bg:      #0c1527;
@@ -38,9 +36,7 @@
   --muted:   #7a90b8;
   --line:    #1f3060;
 }
-
 html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-x:hidden;width:100%;max-width:100vw;}
-
 /* ════════════════════════════════
    PAGE GRID  65 / 35
 ════════════════════════════════ */
@@ -52,7 +48,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   max-width:100%;
   overflow-x:hidden;
 }
-
 /* ════════════════════════════════
    LEFT PANEL
 ════════════════════════════════ */
@@ -65,7 +60,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   overflow:hidden;
   color:#fff;
 }
-
 /* CICT Building Background */
 .lp-building-bg{
   position:absolute;
@@ -78,7 +72,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   z-index:0;
   pointer-events:none;
 }
-
 /* grid texture */
 .lp::before{
   content:"";
@@ -89,7 +82,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   background-size:56px 56px;
   z-index:0;
 }
-
 /* soft radial glow */
 .lp::after{
   content:"";
@@ -100,22 +92,16 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   bottom:-200px;right:-150px;
   z-index:0;
 }
-
 .orb{position:absolute;border-radius:50%;z-index:0;animation:float 8s ease-in-out infinite;}
 .orb1{width:340px;height:340px;top:-100px;right:80px;background:radial-gradient(circle,rgba(100,170,255,0.1),transparent 70%);}
 .orb2{width:220px;height:220px;bottom:80px;left:-60px;background:radial-gradient(circle,rgba(255,255,255,0.06),transparent 70%);animation-delay:-4s;}
-
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
-
 /* thin white shimmer bar */
 .lp-bar{position:absolute;top:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.45),transparent);z-index:2;}
-
 .lp-inner{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;}
-
 /* ── Logo row ── */
 .lp-logo-row{display:flex;align-items:center;gap:16px;margin-bottom:auto;}
-
 .lp-logo-img{
   width:72px;height:72px;border-radius:50%;
   object-fit:cover;
@@ -125,28 +111,22 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   box-shadow:0 0 0 7px rgba(255,255,255,0.05),0 10px 30px rgba(0,0,0,0.35);
   flex-shrink:0;
 }
-
 .lp-id strong{display:block;font-size:0.9rem;font-weight:800;color:#fff;letter-spacing:0.01em;}
 .lp-id span{font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:400;margin-top:2px;display:block;}
-
 /* ── Center copy ── */
 .lp-center{flex:1;display:flex;flex-direction:column;justify-content:center;padding:48px 0 32px;}
-
 .lp-title{
   font-size:clamp(1.9rem,3vw,2.8rem);
   font-weight:900;line-height:1.15;letter-spacing:-0.03em;
   color:#fff;margin-bottom:18px;max-width:560px;
 }
 .lp-title em{font-style:normal;color:rgba(255,255,255,0.65);font-weight:600;}
-
 .lp-desc{
   font-size:0.88rem;color:rgba(255,255,255,0.5);
   line-height:1.75;max-width:520px;margin-bottom:44px;font-weight:400;
 }
-
 /* ── Feature pills ── */
 .lp-pills{display:flex;flex-wrap:wrap;gap:10px;}
-
 .lp-pill{
   display:inline-flex;align-items:center;gap:8px;
   background:rgba(255,255,255,0.06);
@@ -158,13 +138,11 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
 }
 .lp-pill:hover{background:rgba(255,255,255,0.11);border-color:rgba(255,255,255,0.18);}
 .pill-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.55);flex-shrink:0;}
-
 /* ── Footer ── */
 .lp-footer{
   font-size:0.68rem;color:rgba(255,255,255,0.2);line-height:1.6;
   padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);margin-top:auto;
 }
-
 /* ════════════════════════════════
    RIGHT PANEL
 ════════════════════════════════ */
@@ -180,14 +158,12 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
 [data-theme="dark"] .rp{
   background:linear-gradient(160deg,#080f24 0%,#060c1c 100%);
 }
-
 /* particles canvas */
 #rp-canvas{
   position:absolute;top:0;left:0;width:100%;height:100%;
   pointer-events:none;z-index:0;
   opacity:0.45;
 }
-
 /* radial glow spotlight behind card */
 .rp-glow{
   position:absolute;
@@ -205,7 +181,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
   0%,100%{transform:scale(1);opacity:0.8;}
   50%{transform:scale(1.12);opacity:1;}
 }
-
 /* theme toggle */
 .theme-btn{
   position:absolute;top:16px;right:16px;z-index:10;
@@ -221,7 +196,6 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);overflow-
 .theme-btn .moon{display:block;}
 input:checked~.ti .sun{display:block;}
 input:checked~.ti .moon{display:none;}
-
 /* ── Login Card ── */
 .login-card{
   position:relative;z-index:1;
@@ -247,7 +221,6 @@ input:checked~.ti .moon{display:none;}
     0 0 80px rgba(37,99,235,0.08);
   backdrop-filter:blur(20px);
 }
-
 /* Logo ring wrapper */
 .card-logo-wrap{
   display:flex;
@@ -277,7 +250,6 @@ input:checked~.ti .moon{display:none;}
   object-fit:cover;
   display:block;
 }
-
 .card-heading{margin-bottom:20px;}
 .card-heading h1{
   font-size:1.2rem;font-weight:800;
@@ -293,7 +265,6 @@ input:checked~.ti .moon{display:none;}
   border-radius:2px;
   margin-top:10px;
 }
-
 /* Alert */
 .alert{
   padding:10px 13px;border-radius:9px;
@@ -302,25 +273,20 @@ input:checked~.ti .moon{display:none;}
 }
 .alert.error{background:#fef2f2;color:#dc2626;border-color:#fecaca;}
 [data-theme="dark"] .alert.error{background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.22);}
-
 /* Field */
 .field{margin-bottom:12px;}
-
 .field label{
   display:block;font-size:0.68rem;font-weight:700;
   text-transform:uppercase;letter-spacing:0.07em;
   color:var(--muted);margin-bottom:5px;
 }
-
 .input-wrap{position:relative;}
-
 .input-wrap .ico{
   position:absolute;left:11px;top:50%;
   transform:translateY(-50%);
   color:var(--muted);pointer-events:none;
   display:flex;align-items:center;
 }
-
 .input-wrap input{
   width:100%;padding:10px 11px 10px 36px;
   border:1.5px solid var(--line);
@@ -335,10 +301,8 @@ input:checked~.ti .moon{display:none;}
   border-color:var(--blue2);background:var(--surface);
   box-shadow:0 0 0 3px rgba(37,99,235,0.1);
 }
-
 [data-theme="dark"] .input-wrap input{background:#0c1527;border-color:#1f3060;}
 [data-theme="dark"] .input-wrap input:focus{background:#101e3a;box-shadow:0 0 0 3px rgba(59,130,246,0.15);}
-
 /* eye btn */
 .eye-btn{
   position:absolute;right:11px;top:50%;
@@ -349,7 +313,6 @@ input:checked~.ti .moon{display:none;}
   transition:color 0.2s;
 }
 .eye-btn:hover{color:var(--text);}
-
 /* field row */
 .field-row{
   display:flex;align-items:center;
@@ -360,7 +323,6 @@ input:checked~.ti .moon{display:none;}
 .check-label input[type=checkbox]{width:13px;height:13px;accent-color:var(--blue2);cursor:pointer;}
 .forgot-link{color:var(--blue2);text-decoration:none;font-weight:600;font-size:0.74rem;transition:opacity 0.2s;}
 .forgot-link:hover{opacity:0.7;}
-
 /* submit */
 .btn-submit{
   position:relative;overflow:hidden;
@@ -379,11 +341,9 @@ input:checked~.ti .moon{display:none;}
   transform:translateY(-2px);
 }
 .btn-submit:active{transform:none;filter:none;box-shadow:0 2px 8px rgba(26,79,214,0.25);}
-
 /* card animation */
 .login-card{animation:cardIn 0.45s cubic-bezier(0.22,1,0.36,1) both;}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
 /* ── Responsive (mobile/tablet only) ── */
 @media(max-width:900px){
   .page{grid-template-columns:1fr;}
@@ -410,16 +370,12 @@ input:checked~.ti .moon{display:none;}
 </head>
 <body>
 <div class="page">
-
 <div class="lp">
   <div class="lp-building-bg"></div>
   <div class="lp-bar"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
-
   <div class="lp-inner">
-
-    
     <div class="lp-logo-row">
       <img class="lp-logo-img" src="{{ url_for('static', filename='logo.png') }}" alt="NEUST CICT Logo">
       <div class="lp-id">
@@ -427,8 +383,6 @@ input:checked~.ti .moon{display:none;}
         <span>Nueva Ecija University of Science &amp; Technology</span>
       </div>
     </div>
-
-    
     <div class="lp-center">
       <h1 class="lp-title">
         QR Code-Enabled Repair<br>
@@ -446,17 +400,14 @@ input:checked~.ti .moon{display:none;}
         <span class="lp-pill"><span class="pill-dot"></span>Role-Based Access</span>
       </div>
     </div>
-
     <p class="lp-footer">
       CICT QRMS is a student-run project to provide inventory and property management to the CICT department. It is not affiliated with the university.
     </p>
   </div>
 </div>
-
 <div class="rp">
   <canvas id="rp-canvas"></canvas>
   <div class="rp-glow"></div>
-
   <div class="login-card">
     <label class="theme-btn" aria-label="Toggle dark mode">
       <input type="checkbox" id="theme-toggle">
@@ -465,28 +416,22 @@ input:checked~.ti .moon{display:none;}
         <svg class="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </span>
     </label>
-
     <div style="position:relative; z-index:1;">
-
-    
     <div class="card-logo-wrap">
       <div class="card-logo-ring">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="NEUST CICT">
       </div>
     </div>
-
     <div class="card-heading">
       <h1>Sign In</h1>
       <p>Access your QRMS account</p>
     </div>
-
     {% if error %}
     <div class="alert error" role="alert">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       {{ error }}
     </div>
     {% endif %}
-
     <form method="post" novalidate>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       {% if next_url %}
@@ -502,7 +447,6 @@ input:checked~.ti .moon{display:none;}
                  placeholder="you@school.edu" autocomplete="email">
         </div>
       </div>
-
       <div class="field">
         <label for="password">Password</label>
         <div class="input-wrap">
@@ -516,13 +460,11 @@ input:checked~.ti .moon{display:none;}
           </button>
         </div>
       </div>
-
       <div class="field-row">
         <label class="check-label">
           <input type="checkbox" name="remember"> Remember me
         </label>
       </div>
-
       <button type="submit" id="btn-signin" class="btn-submit">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         Sign In
@@ -531,9 +473,7 @@ input:checked~.ti .moon{display:none;}
     </div>
   </div>
 </div>
-
 </div>
-
 <script>
 (function(){
   var saved=localStorage.getItem('theme');
@@ -561,21 +501,18 @@ input:checked~.ti .moon{display:none;}
         eye.setAttribute('aria-label',vis?'Show password':'Hide password');
       });
     }
-
     // ── Floating particles ──
     var canvas=document.getElementById('rp-canvas');
     if(canvas){
       var ctx=canvas.getContext('2d');
       var particles=[];
       var isDark=function(){return document.documentElement.getAttribute('data-theme')==='dark';};
-
       function resize(){
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
       }
       window.addEventListener('resize',resize);
       resize();
-
       for(var i=0;i<40;i++){
         particles.push({
           x:Math.random()*canvas.width,
@@ -586,7 +523,6 @@ input:checked~.ti .moon{display:none;}
           o:Math.random()*0.5+0.15
         });
       }
-
       function drawParticles(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         var dark=isDark();

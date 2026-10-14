@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
-<!-- Live Real-Time Dashboard Header -->
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 22px;">
     <div>
         <h1 style="font-size:1.45rem; font-weight:800; color:var(--text); margin:0;">Admin Dashboard</h1>
@@ -12,8 +10,6 @@
         <span style="font-weight:700; color:var(--text);" class="live-realtime-clock">Live Clock Loading...</span>
     </div>
 </div>
-
-<!-- Top KPI Summary Cards -->
 <div class="grid" style="margin-bottom: 24px;">
     <div class="stat-card">
         <h3>Total Users</h3>
@@ -39,8 +35,6 @@
         <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Avg response: <strong>{{ avg_resp }}h</strong> &middot; Busiest hour: <strong>{{ peak_hour_str }}</strong></p>
     </div>
 </div>
-
-<!-- Administration Quick Actions -->
 <div class="card" style="margin-bottom: 24px;">
     <div class="card-header">
         <div>
@@ -75,8 +69,6 @@
         </a>
     </div>
 </div>
-
-<!-- Visual Analytics Charts -->
 <div class="grid" style="align-items: start; margin-bottom: 24px;">
     <div class="card">
         <div class="card-header">
@@ -93,7 +85,6 @@
         <canvas id="statusChart" style="max-height: 260px;"></canvas>
     </div>
 </div>
-
 <script id="chart-data" type="application/json">
 {
     "mLabels": {{ monthly|map(attribute='_id')|list|tojson|safe }},
@@ -106,21 +97,17 @@
     document.addEventListener("DOMContentLoaded", () => {
         const dataElement = document.getElementById("chart-data");
         if (!dataElement) return;
-        
         let chartData = {};
         try {
             chartData = JSON.parse(dataElement.textContent || "{}");
         } catch (e) {
             console.error("Failed to parse chart data JSON", e);
         }
-
         const mLabels = chartData.mLabels || [];
         const mData = chartData.mData || [];
         const sLabels = chartData.sLabels || [];
         const sData = chartData.sData || [];
-        
         const chartLegendPos = window.matchMedia("(max-width: 768px)").matches ? "bottom" : "right";
-
         const reqCanvas = document.getElementById("reqChart");
         if (reqCanvas) {
             new Chart(reqCanvas, {
@@ -142,7 +129,6 @@
                 }
             });
         }
-
         const statusCanvas = document.getElementById("statusChart");
         if (statusCanvas) {
             const statusColorMap = {
@@ -157,7 +143,6 @@
                 "Rejected": "#ef4444"              // Red
             };
             const sColors = sLabels.map(l => statusColorMap[l] || "#64748b");
-
             new Chart(statusCanvas, {
                 type: "doughnut",
                 data: {
@@ -177,8 +162,6 @@
         }
     });
 </script>
-
-<!-- ─── Equipment Currently Under Repair ─── -->
 <div class="card" style="margin-bottom: 24px;">
     <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
@@ -254,10 +237,7 @@
         </table>
     </div>
 </div>
-
-<!-- ─── Monthly Technician Repairs & Frequently Broken Equipment ─── -->
 <div class="grid" style="align-items: start; margin-bottom: 24px;">
-    <!-- Monthly Technician Repairs -->
     <div class="card">
         <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
             <div>
@@ -312,8 +292,6 @@
             </table>
         </div>
     </div>
-
-    <!-- Frequently Broken Equipment -->
     <div class="card">
         <div class="card-header">
             <h2 style="display:flex; align-items:center; gap:8px;">
@@ -366,10 +344,7 @@
         </div>
     </div>
 </div>
-
-<!-- Lower Detail Grids -->
 <div class="grid" style="align-items: start;">
-    <!-- Recent System Activity -->
     <div class="card">
         <div class="card-header">
             <h2>Recent System Activity</h2>
@@ -398,8 +373,6 @@
             </table>
         </div>
     </div>
-
-    <!-- Most Reported Equipment -->
     <div class="card">
         <div class="card-header">
             <h2>Most Reported Equipment</h2>
@@ -427,5 +400,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

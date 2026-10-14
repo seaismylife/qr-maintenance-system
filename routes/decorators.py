@@ -19,7 +19,6 @@ def _enforce_session_timeout():
     session["last_activity"] = datetime.now(timezone.utc).timestamp()
     return True
 
-
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):

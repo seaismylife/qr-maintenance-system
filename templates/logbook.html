@@ -5,7 +5,6 @@
     <p style="text-align: center; color: #666; margin-bottom: 20px;">Official Repair &amp; Maintenance Record</p>
     <hr style="margin-bottom: 20px; border: 1px solid #ccc;">
 </div>
-
 <div class="grid" style="margin-bottom: 24px;">
     <div class="stat-card">
         <h3>Total Repairs Completed</h3>
@@ -20,7 +19,6 @@
         <strong style="font-size:1.2rem;">{{ top_category|clean }}</strong>
     </div>
 </div>
-
 <div class="card no-print">
     <div class="card-header">
         <h2>Logbook Filters &amp; Options</h2>
@@ -67,7 +65,6 @@
         </button>
     </div>
 </div>
-
 <div class="card" style="margin-top: 24px;">
     <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
@@ -83,10 +80,8 @@
         </button>
         {% endif %}
     </div>
-
     <input class="table-search" id="searchLogbook" type="search" placeholder="Quick search table…"
         onkeyup="filterTable('searchLogbook', 'logbookTable')">
-
     <form method="POST" action="{{ url_for('logbook.delete_logs') }}" id="deleteLogsForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="table-wrap">
@@ -168,7 +163,6 @@
     </div>
     </form>
 </div>
-
 <script>
 function toggleAllLogCheckboxes(selectAll) {
     var checkboxes = document.querySelectorAll('.log-checkbox');
@@ -177,7 +171,6 @@ function toggleAllLogCheckboxes(selectAll) {
     }
     updateArchiveCount();
 }
-
 function updateArchiveCount() {
     var checked = document.querySelectorAll('.log-checkbox:checked');
     var btn = document.getElementById('archiveSelectedBtn') || document.getElementById('deleteSelectedBtn');
@@ -185,7 +178,6 @@ function updateArchiveCount() {
     if (!btn) return;
     if (countEl) countEl.textContent = checked.length;
     btn.style.display = checked.length > 0 ? 'inline-flex' : 'none';
-
     var selectAll = document.getElementById('selectAllLogs');
     var total = document.querySelectorAll('.log-checkbox');
     if (selectAll) {

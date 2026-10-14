@@ -13,7 +13,6 @@ from models.security import (
 
 auth_bp = Blueprint("auth", __name__)
 
-
 def _safe_next(target):
     if not target:
         return None
@@ -23,7 +22,6 @@ def _safe_next(target):
     if parsed.scheme or parsed.netloc:
         return None
     return target
-
 
 @auth_bp.route("/", methods=["GET", "POST"])
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -62,7 +60,6 @@ def login():
 
                 if user and bcrypt.checkpw(pwd.encode("utf-8"), user["password"].encode("utf-8")):
                     clear_failed_logins(ip_addr)
-                    # Regenerate session state to prevent session fixation
                     session.clear()
                     session.permanent = remember
                     session["user"] = {
@@ -89,7 +86,6 @@ def login():
                 db.close()
 
     return render_template("login.html", error=error, next_url=next_url)
-
 
 @auth_bp.route("/logout")
 def logout():

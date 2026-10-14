@@ -10,10 +10,8 @@ submit_bp = Blueprint("submit", __name__, url_prefix="/request_submit")
 
 ALLOWED = {"png", "jpg", "jpeg", "gif", "webp"}
 
-
 def _allowed(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED
-
 
 def save_maintenance_request(db, reporter_id, equipment_id, description, urgency, image_file, affected_component=None):
     eq_oid = oid(equipment_id)
@@ -47,7 +45,6 @@ def save_maintenance_request(db, reporter_id, equipment_id, description, urgency
         (eq_oid, reporter, description, urgency or "Medium", image_path, affected, now_utc().replace(tzinfo=None)),
     )
 
-    # Trigger notifications for Technicians/Admins & Reporter confirmation
     cur.execute("SELECT id FROM users WHERE role IN ('technician', 'admin') AND (is_deleted IS NULL OR is_deleted=0)")
     recipients = [r["id"] for r in cur.fetchall()]
     if reporter and reporter not in recipients:
@@ -70,7 +67,6 @@ def save_maintenance_request(db, reporter_id, equipment_id, description, urgency
     db.commit()
     cur.close()
     return None
-
 
 @submit_bp.route("/", methods=["GET", "POST"])
 @role_required("faculty", "admin", "custodian", "technician")

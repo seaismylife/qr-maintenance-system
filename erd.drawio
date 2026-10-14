@@ -4,8 +4,6 @@
 <root>
 <mxCell id="0"/>
 <mxCell id="1" parent="0"/>
-
-<!-- ==================== USERS TABLE ==================== -->
 <mxCell id="T_USERS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;users&lt;/b&gt;" vertex="1">
 <mxGeometry height="238" width="290" x="60" y="100" as="geometry"/>
 </mxCell>
@@ -33,8 +31,6 @@
 <mxCell id="T_USERS_r8" parent="T_USERS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="290" y="212" as="geometry"/>
 </mxCell>
-
-<!-- ==================== EQUIPMENT TABLE ==================== -->
 <mxCell id="T_EQUIPMENT" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;equipment&lt;/b&gt;" vertex="1">
 <mxGeometry height="264" width="310" x="540" y="100" as="geometry"/>
 </mxCell>
@@ -65,8 +61,6 @@
 <mxCell id="T_EQUIPMENT_r9" parent="T_EQUIPMENT" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="310" y="238" as="geometry"/>
 </mxCell>
-
-<!-- ==================== ACTIVITY LOGS TABLE ==================== -->
 <mxCell id="T_ACTIVITY" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;activity_logs&lt;/b&gt;" vertex="1">
 <mxGeometry height="212" width="290" x="60" y="480" as="geometry"/>
 </mxCell>
@@ -91,8 +85,6 @@
 <mxCell id="T_ACTIVITY_r7" parent="T_ACTIVITY" style="text;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="290" y="186" as="geometry"/>
 </mxCell>
-
-<!-- ==================== MAINTENANCE REQUESTS TABLE ==================== -->
 <mxCell id="T_REQUESTS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;maintenance_requests&lt;/b&gt;" vertex="1">
 <mxGeometry height="394" width="340" x="540" y="480" as="geometry"/>
 </mxCell>
@@ -138,8 +130,6 @@
 <mxCell id="T_REQUESTS_r14" parent="T_REQUESTS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="340" y="368" as="geometry"/>
 </mxCell>
-
-<!-- ==================== MAINTENANCE LOGS TABLE ==================== -->
 <mxCell id="T_LOGS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;maintenance_logs&lt;/b&gt;" vertex="1">
 <mxGeometry height="290" width="320" x="1080" y="480" as="geometry"/>
 </mxCell>
@@ -173,8 +163,6 @@
 <mxCell id="T_LOGS_r10" parent="T_LOGS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;deleted_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="320" y="264" as="geometry"/>
 </mxCell>
-
-<!-- ==================== NOTIFICATIONS TABLE ==================== -->
 <mxCell id="T_NOTIFS" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;strokeWidth=2;fontColor=#ffffff;fontSize=12;arcSize=6;" value="&lt;b&gt;notifications&lt;/b&gt;" vertex="1">
 <mxGeometry height="186" width="290" x="60" y="780" as="geometry"/>
 </mxCell>
@@ -196,9 +184,6 @@
 <mxCell id="T_NOTIFS_r6" parent="T_NOTIFS" style="text;strokeColor=none;fillColor=#f8fafc;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=8;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=11;fontColor=#0f172a;" value="&lt;div style=&apos;text-align:left; font-size:11px;&apos;&gt;&lt;span style=&apos;display:inline-block; width:22px;&apos;&gt;&lt;/span&gt;&lt;span style=&apos;font-weight:normal; color:#1e293b;&apos;&gt;created_at&lt;/span&gt;&lt;/div&gt;" vertex="1">
 <mxGeometry height="26" width="290" y="160" as="geometry"/>
 </mxCell>
-
-<!-- ==================== RELATIONSHIPS (CONNECTOR LINES) ==================== -->
-<!-- Users -> Maintenance Logs (Technician) -->
 <mxCell id="rel_u_log" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.62;exitY=0;exitDx=0;exitDy=0;entryX=0.996;entryY=0.048;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_LOGS">
 <mxGeometry relative="1" x="-0.1925" as="geometry">
 <Array as="points">
@@ -210,8 +195,6 @@
 </Array>
 </mxGeometry>
 </mxCell>
-
-<!-- Users -> Notifications -->
 <mxCell id="rel_u_notif" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.38;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.054;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_NOTIFS">
 <mxGeometry relative="1" x="0.0406" as="geometry">
 <Array as="points">
@@ -221,8 +204,6 @@
 </Array>
 </mxGeometry>
 </mxCell>
-
-<!-- Users -> Activity Logs -->
 <mxCell id="rel_u_act" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0;exitY=0.17;exitDx=0;exitDy=0;entryX=-0.008;entryY=0.069;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_ACTIVITY">
 <mxGeometry relative="1" x="0.072" as="geometry">
 <Array as="points">
@@ -231,8 +212,6 @@
 </Array>
 </mxGeometry>
 </mxCell>
-
-<!-- Users -> Maintenance Requests (Reporter) -->
 <mxCell id="rel_u_req_rep" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1;exitY=0.15;exitDx=0;exitDy=0;">
 <mxGeometry relative="1" x="0.0026" as="geometry">
 <Array as="points">
@@ -243,8 +222,6 @@
 <mxPoint x="650" y="480" as="targetPoint"/>
 </mxGeometry>
 </mxCell>
-
-<!-- Users -> Maintenance Requests (Technician) -->
 <mxCell id="rel_u_req_tech" edge="1" parent="1" source="T_USERS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1;exitY=0.23;exitDx=0;exitDy=0;entryX=0.002;entryY=0.044;entryDx=0;entryDy=0;entryPerimeter=0;" target="T_REQUESTS">
 <mxGeometry relative="1" x="0.0389" as="geometry">
 <Array as="points">
@@ -253,16 +230,12 @@
 </Array>
 </mxGeometry>
 </mxCell>
-
-<!-- Equipment -> Maintenance Requests -->
 <mxCell id="rel_eq_req" edge="1" parent="1" source="T_EQUIPMENT" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=1.002;exitY=0.064;exitDx=0;exitDy=0;entryX=0.46;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;">
 <mxGeometry relative="1" as="geometry">
 <mxPoint x="869.9999999999998" y="364" as="sourcePoint"/>
 <mxPoint x="871.3999999999999" y="480" as="targetPoint"/>
 </mxGeometry>
 </mxCell>
-
-<!-- Equipment -> Maintenance Logs -->
 <mxCell id="rel_eq_log" edge="1" parent="1" source="T_EQUIPMENT" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#334155;startArrow=ERmandOne;startFill=0;startSize=10;endArrow=ERoneToMany;endFill=0;endSize=10;exitX=0.596;exitY=0.001;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="T_LOGS">
 <mxGeometry relative="1" x="0.2516" as="geometry">
 <Array as="points">
@@ -273,15 +246,12 @@
 </Array>
 </mxGeometry>
 </mxCell>
-
-<!-- Maintenance Requests -> Maintenance Logs -->
 <mxCell id="jOvprRBnW8bPXOyV4Ic--3" edge="1" parent="1" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmandOne;startArrow=ERmandOne;rounded=0;entryX=0;entryY=0.076;entryDx=0;entryDy=0;entryPerimeter=0;startSize=10;endSize=10;strokeWidth=1.5;strokeColor=#475569;" target="T_LOGS" value="">
 <mxGeometry height="100" relative="1" width="100" as="geometry">
 <mxPoint x="880" y="500" as="sourcePoint"/>
 <mxPoint x="980" y="400" as="targetPoint"/>
 </mxGeometry>
 </mxCell>
-
 </root>
 </mxGraphModel>
 </diagram>

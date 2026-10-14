@@ -1,6 +1,5 @@
 from app import app as flask_app
 
-
 def test_scan_camera_is_available_for_faculty():
     flask_app.config.update(TESTING=True)
     with flask_app.test_client() as client:
@@ -15,7 +14,6 @@ def test_scan_camera_is_available_for_faculty():
 
         response = client.get("/scan")
     assert response.status_code == 200
-
 
 def test_scan_camera_is_available_for_technician():
     flask_app.config.update(TESTING=True)
@@ -32,7 +30,6 @@ def test_scan_camera_is_available_for_technician():
         response = client.get("/scan")
     assert response.status_code == 200
 
-
 def test_scan_camera_is_available_for_custodian():
     flask_app.config.update(TESTING=True)
     with flask_app.test_client() as client:
@@ -48,13 +45,11 @@ def test_scan_camera_is_available_for_custodian():
         response = client.get("/scan")
     assert response.status_code == 200
 
-
 def test_scan_camera_requires_login():
     flask_app.config.update(TESTING=True)
     with flask_app.test_client() as client:
         response = client.get("/scan")
     assert response.status_code == 302
-
 
 def test_admin_scan_and_qr_print_back_links():
     flask_app.config.update(TESTING=True)
@@ -68,18 +63,15 @@ def test_admin_scan_and_qr_print_back_links():
             }
             session["last_activity"] = "9999999999"
 
-        # Check /scan has back button
         res_scan = client.get("/scan")
         assert res_scan.status_code == 200
         assert b"Back" in res_scan.data
 
-        # Check /qr/print Back button links to admin dashboard, not custodian
         res_print = client.get("/qr/print")
         assert res_print.status_code == 200
         assert b"/dashboard/admin" in res_print.data
         assert b"/dashboard/custodian" not in res_print.data
 
-        # If admin visits other dashboards, should redirect to /dashboard/admin rather than 403
         res_cust = client.get("/dashboard/custodian")
         assert res_cust.status_code == 302
         assert "/dashboard/admin" in res_cust.headers["Location"]

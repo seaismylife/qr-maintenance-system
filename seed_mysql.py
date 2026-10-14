@@ -35,7 +35,6 @@ def main():
             (name, email, hashed, role, now_utc().replace(tzinfo=None)),
         )
 
-    # Seed initial equipment if table is empty
     cur.execute("SELECT COUNT(*) AS cnt FROM equipment WHERE is_deleted=0")
     if cur.fetchone()["cnt"] == 0:
         base_url = config.PUBLIC_BASE_URL if config.PUBLIC_BASE_URL else "http://localhost:5000"

@@ -14,16 +14,13 @@
             --line: #e2e8f0;
             --bg: #f8fafc;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Outfit', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             padding: 20px;
         }
-
         .screen-bar {
             display: flex;
             align-items: center;
@@ -37,10 +34,8 @@
             margin-bottom: 24px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
-
         .screen-bar h1 { font-size: 1.15rem; font-weight: 700; color: var(--text); }
         .screen-bar p { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
-
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn {
             display: inline-flex; align-items: center; gap: 8px;
@@ -53,9 +48,7 @@
         .btn-primary:hover { background: #1d4ed8; }
         .btn-secondary { background: #fff; color: var(--text); border-color: var(--line); }
         .btn-secondary:hover { background: var(--bg); }
-
         .qr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        
         /* Single label view styling */
         .qr-single-wrap {
             max-width: 380px;
@@ -109,7 +102,6 @@
             padding-top: 8px;
             margin-top: 10px;
         }
-
         /* Multi-card grid styling */
         .qr-card {
             background: #fff; border: 1px solid var(--line); border-radius: 10px;
@@ -125,11 +117,9 @@
         .btn-print-card:hover { background: #334155; }
         .btn-dl { background: var(--bg); color: var(--text); border: 1px solid var(--line) !important; }
         .btn-dl:hover { background: #e2e8f0; }
-
         .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
         .empty-state h2 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
         .empty-state p { font-size: 0.9rem; }
-
         @media print {
             body { background: #fff; padding: 0; }
             .screen-bar, .qr-actions { display: none !important; }
@@ -138,7 +128,6 @@
             .qr-card img { width: 110px; height: 110px; margin-bottom: 8px; }
             .qr-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; color: #000; }
             .qr-sub { font-size: 0.72rem; margin-bottom: 0; color: #334155; }
-
             /* Single label print output */
             .qr-single-wrap {
                 max-width: 320px;
@@ -204,7 +193,6 @@
         </button>
     </div>
 </div>
-
 {% if not equipment %}
 <div class="empty-state">
     <h2>No QR codes found</h2>
@@ -248,4 +236,3 @@
 {% endif %}
 </body>
 </html>
-

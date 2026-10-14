@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app import app
 from models import get_db
 
-
 class TestTechnicianTaskIsolation(unittest.TestCase):
     def setUp(self):
         self.app = app
@@ -27,7 +26,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
         db.close()
 
     def test_technician_can_only_see_own_assigned_tasks(self):
-        # Technician 6 (Technician User) with string ID (like session cookie)
         user6_str = dict(self.users[6])
         user6_str["id"] = str(user6_str["id"])
         with self.client.session_transaction() as sess:
@@ -39,22 +37,18 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         html = resp.data.decode("utf-8")
 
-        # Requests 2, 3, 4 are assigned to technician 6
         self.assertIn('name="request_id" value="2"', html)
         self.assertIn('name="request_id" value="3"', html)
         self.assertIn('name="request_id" value="4"', html)
 
-        # Form controls must be rendered for the technician
         self.assertIn('<select name="status"', html)
         self.assertIn('Submit', html)
         self.assertNotIn('Assigned to Technician User</div>', html)
 
-        # Requests 1 and 5 are assigned to technician 7 (Tech 2) -> must NOT appear
         self.assertNotIn('name="request_id" value="1"', html)
         self.assertNotIn('name="request_id" value="5"', html)
 
     def test_tech2_can_only_see_own_assigned_tasks(self):
-        # Technician 7 (Tech 2)
         with self.client.session_transaction() as sess:
             sess["user_id"] = 7
             sess["user"] = self.users[7]
@@ -64,17 +58,14 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         html = resp.data.decode("utf-8")
 
-        # Requests 1, 5 are assigned to technician 7
         self.assertIn('name="request_id" value="1"', html)
         self.assertIn('name="request_id" value="5"', html)
 
-        # Requests 2, 3, 4 are assigned to technician 6 -> must NOT appear
         self.assertNotIn('name="request_id" value="2"', html)
         self.assertNotIn('name="request_id" value="3"', html)
         self.assertNotIn('name="request_id" value="4"', html)
 
     def test_technician_cannot_modify_another_technicians_task(self):
-        # Technician 6 tries to POST update to Request 1 (which belongs to Technician 7)
         with self.client.session_transaction() as sess:
             sess["user_id"] = 6
             sess["user"] = self.users[6]
@@ -87,11 +78,9 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             "equipment_id": 11,
             "status": "In Progress"
         })
-        # Backend security guard must abort with 403 Forbidden
         self.assertEqual(resp.status_code, 403)
 
     def test_admin_can_see_all_technician_tasks(self):
-        # Admin (User 1)
         with self.client.session_transaction() as sess:
             sess["user_id"] = 1
             sess["user"] = self.users[1]
@@ -101,18 +90,15 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         html = resp.data.decode("utf-8")
 
-        # Admin must see all requests 1, 2, 3, 4, 5
         self.assertIn('value="1"', html)
         self.assertIn('value="2"', html)
         self.assertIn('value="3"', html)
         self.assertIn('value="4"', html)
         self.assertIn('value="5"', html)
 
-
     def test_technician_cannot_see_or_claim_unassigned_task(self):
         db = get_db()
         cur = db.cursor(dictionary=True)
-        # Insert a temporary unassigned request
         cur.execute(
             "INSERT INTO maintenance_requests (equipment_id, reported_by, description, urgency, status, technician_id) "
             "VALUES (12, 1, 'Admin assignment test issue', 'Medium', 'Pending', NULL)"
@@ -121,7 +107,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
         db.commit()
 
         try:
-            # 1. Technician 6 views the page -> must NOT see the unassigned request
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 6
                 sess["user"] = self.users[6]
@@ -132,7 +117,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             self.assertNotIn(f'value="{test_req_id}"', html)
             self.assertNotIn("Claim Task", html)
 
-            # 2. Technician 6 attempts to POST update to unassigned request -> blocked with 403
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 6
                 sess["user"] = self.users[6]
@@ -147,7 +131,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             })
             self.assertEqual(claim_resp.status_code, 403)
 
-            # 3. Admin views the page -> CAN see the unassigned request
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 1
                 sess["user"] = self.users[1]
@@ -157,7 +140,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             admin_html = admin_resp.data.decode("utf-8")
             self.assertIn(f'value="{test_req_id}"', admin_html)
 
-            # 4. Admin assigns the request to Technician 6
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 1
                 sess["user"] = self.users[1]
@@ -170,7 +152,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             }, follow_redirects=True)
             self.assertEqual(assign_resp.status_code, 200)
 
-            # 5. Now Technician 6 CAN see the assigned request
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 6
                 sess["user"] = self.users[6]
@@ -180,7 +161,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             html_tech6 = resp_tech6.data.decode("utf-8")
             self.assertIn(f'value="{test_req_id}"', html_tech6)
 
-            # 6. Tech 2 (id: 7) does NOT see the request
             with self.client.session_transaction() as sess:
                 sess["user_id"] = 7
                 sess["user"] = self.users[7]
@@ -195,7 +175,6 @@ class TestTechnicianTaskIsolation(unittest.TestCase):
             db.commit()
             cur.close()
             db.close()
-
 
 if __name__ == "__main__":
     unittest.main()

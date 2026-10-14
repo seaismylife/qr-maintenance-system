@@ -9,13 +9,11 @@ from models.security import csrf_protect
 
 logbook_bp = Blueprint("logbook", __name__, url_prefix="/logbook")
 
-
 def _parse_date(s, fallback):
     try:
         return datetime.strptime(s, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     except Exception:
         return fallback
-
 
 @logbook_bp.route("/")
 @role_required("technician", "admin", "custodian")
@@ -100,7 +98,6 @@ def index():
             else:
                 r["duration_str"] = "—"
 
-        # CSV Export
         if request.args.get("export") == "csv":
             buf = io.StringIO()
             w = csv.writer(buf)
@@ -153,13 +150,11 @@ def index():
                 headers={"Content-Disposition": "attachment; filename=repair_logbook.csv"},
             )
 
-        # Categories for dropdown
         cur.execute(
             "SELECT DISTINCT category FROM equipment WHERE category IS NOT NULL AND category <> '' AND (is_deleted IS NULL OR is_deleted=0) ORDER BY category ASC"
         )
         categories = [r["category"] for r in cur.fetchall()]
 
-        # Summary Statistics
         cur.execute("SELECT COUNT(*) AS total FROM maintenance_logs WHERE (is_deleted IS NULL OR is_deleted=0)")
         total_repairs = cur.fetchone()["total"]
 
@@ -201,7 +196,6 @@ def index():
         )
     finally:
         db.close()
-
 
 @logbook_bp.route("/delete", methods=["POST"], endpoint="delete_logs")
 @logbook_bp.route("/archive", methods=["POST"], endpoint="archive_logs")
