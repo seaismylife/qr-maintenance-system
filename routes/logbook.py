@@ -2,7 +2,8 @@ import csv
 import io
 from datetime import datetime, timezone, timedelta
 from flask import Blueprint, render_template, request, Response, redirect, url_for, session
-from models import get_db, format_date, log_activity
+
+from models import get_db, format_date, log_activity, now_utc
 from routes.decorators import role_required
 from models.security import csrf_protect
 
@@ -81,7 +82,7 @@ def index():
             JOIN maintenance_requests mr ON mr.id = ml.request_id
             LEFT JOIN users u ON u.id = mr.reported_by
             LEFT JOIN users tech ON tech.id = COALESCE(ml.technician_id, mr.technician_id)
-            WHERE 1=1 {where_clause}
+            WHERE (ml.is_deleted IS NULL OR ml.is_deleted=0) {where_clause}
             ORDER BY ml.date_completed DESC
         """
 
@@ -159,12 +160,12 @@ def index():
         categories = [r["category"] for r in cur.fetchall()]
 
         # Summary Statistics
-        cur.execute("SELECT COUNT(*) AS total FROM maintenance_logs")
+        cur.execute("SELECT COUNT(*) AS total FROM maintenance_logs WHERE (is_deleted IS NULL OR is_deleted=0)")
         total_repairs = cur.fetchone()["total"]
 
         thirty_days_ago = (now - timedelta(days=30)).replace(tzinfo=None)
         cur.execute(
-            "SELECT COUNT(*) AS recent FROM maintenance_logs WHERE date_completed >= %s",
+            "SELECT COUNT(*) AS recent FROM maintenance_logs WHERE date_completed >= %s AND (is_deleted IS NULL OR is_deleted=0)",
             (thirty_days_ago,),
         )
         recent_30_days = cur.fetchone()["recent"]
@@ -174,7 +175,7 @@ def index():
             SELECT e.category, COUNT(*) AS cnt
             FROM maintenance_logs ml
             JOIN equipment e ON e.id = ml.equipment_id
-            WHERE e.category IS NOT NULL AND e.category <> ''
+            WHERE e.category IS NOT NULL AND e.category <> '' AND (ml.is_deleted IS NULL OR ml.is_deleted=0)
             GROUP BY e.category
             ORDER BY cnt DESC
             LIMIT 1
@@ -202,7 +203,8 @@ def index():
         db.close()
 
 
-@logbook_bp.route("/delete", methods=["POST"])
+@logbook_bp.route("/delete", methods=["POST"], endpoint="delete_logs")
+@logbook_bp.route("/archive", methods=["POST"], endpoint="archive_logs")
 @role_required("technician", "admin")
 @csrf_protect
 def delete_logs():
@@ -221,10 +223,13 @@ def delete_logs():
             except (ValueError, TypeError):
                 continue
 
-            cur.execute("SELECT request_id FROM maintenance_logs WHERE id=%s", (lid_int,))
+            cur.execute("SELECT request_id FROM maintenance_logs WHERE id=%s AND (is_deleted IS NULL OR is_deleted=0)", (lid_int,))
             row = cur.fetchone()
             if row:
-                cur.execute("DELETE FROM maintenance_logs WHERE id=%s", (lid_int,))
+                cur.execute(
+                    "UPDATE maintenance_logs SET is_deleted=1, deleted_at=%s WHERE id=%s",
+                    (now_utc().replace(tzinfo=None), lid_int),
+                )
                 cur.execute(
                     "UPDATE maintenance_requests SET status='Pending', date_responded=NULL WHERE id=%s",
                     (row["request_id"],),
@@ -234,7 +239,7 @@ def delete_logs():
         db.commit()
         if deleted_count > 0:
             try:
-                log_activity(db, session.get("user", {}).get("id"), "delete_logs", f"Deleted {deleted_count} maintenance log record(s)", "maintenance_log", None)
+                log_activity(db, session.get("user", {}).get("id"), "archive_logs", f"Archived {deleted_count} maintenance log record(s)", "maintenance_log", None)
             except Exception:
                 pass
         cur.close()

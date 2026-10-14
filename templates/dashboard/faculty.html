@@ -55,7 +55,7 @@
                     <tr>
                         <th>Equipment</th>
                         <th>Location</th>
-                        <th>Urgency</th>
+                        <th>Priority</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -66,13 +66,13 @@
                         <td style="font-size:0.85rem;">{{ r.equipment_location|clean }}</td>
                         <td>
                             {% if r.urgency == 'Critical' %}
-                                <span class="badge badge-danger">Critical</span>
+                                <span class="badge badge-danger" style="font-weight:700;">Critical Priority</span>
                             {% elif r.urgency == 'High' %}
-                                <span class="badge badge-warning">High</span>
+                                <span class="badge badge-danger" style="font-weight:700;">High Priority</span>
                             {% elif r.urgency == 'Medium' %}
-                                <span class="badge badge-info">Medium</span>
+                                <span class="badge badge-warning" style="font-weight:600;">Medium Priority</span>
                             {% else %}
-                                <span class="badge">{{ r.urgency|clean }}</span>
+                                <span class="badge badge-info" style="font-weight:500;">Low Priority</span>
                             {% endif %}
                         </td>
                         <td><span class="{{ status_badge(r.status) }}">{{ r.status|clean }}</span></td>

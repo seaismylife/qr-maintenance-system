@@ -1,8 +1,8 @@
 import os
 import subprocess
 import bcrypt
-from flask import Blueprint, render_template, request, redirect, url_for, flash, Response, session
-from models import get_db, oid, now_utc, format_date, log_activity, backup_database
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response, session, current_app
+from models import get_db, oid, now_utc, format_date, log_activity, backup_database, restore_database
 import config
 from routes.decorators import role_required
 from models.security import validate_user_payload, normalize_text, csrf_protect
@@ -53,21 +53,21 @@ def index():
             flash("User created successfully.", "success")
             return redirect(url_for("user_mgmt.index"))
 
-        # Fallback query parameter deletion
-        if "delete" in request.args:
-            uid = oid(request.args["delete"])
+        # Fallback query parameter deletion/archival
+        if "delete" in request.args or "archive" in request.args:
+            uid = oid(request.args.get("archive") or request.args.get("delete"))
             admin_id = oid(session.get("user", {}).get("id"))
             if uid and uid != admin_id:
                 cur.execute("SELECT id, role, email FROM users WHERE id=%s LIMIT 1", (uid,))
                 u = cur.fetchone()
                 if u and u.get("role") != "admin":
-                    cur.execute("DELETE FROM users WHERE id=%s", (uid,))
+                    cur.execute("UPDATE users SET is_deleted=1, deleted_at=%s WHERE id=%s", (now_utc().replace(tzinfo=None), uid))
                     db.commit()
                     try:
-                        log_activity(db, admin_id, "delete_user", f"Deleted user {u.get('email')}", "user", uid)
+                        log_activity(db, admin_id, "archive_user", f"Archived user {u.get('email')}", "user", uid)
                     except Exception:
                         pass
-                    flash("User deleted successfully.", "success")
+                    flash("User archived successfully.", "success")
             cur.close()
             return redirect(url_for("user_mgmt.index"))
 
@@ -83,13 +83,14 @@ def index():
         db.close()
 
 
-@user_mgmt_bp.route("/delete/<int:user_id>", methods=["POST"])
+@user_mgmt_bp.route("/delete/<int:user_id>", methods=["POST"], endpoint="delete_user")
+@user_mgmt_bp.route("/archive/<int:user_id>", methods=["POST"], endpoint="archive_user")
 @role_required("admin")
 @csrf_protect
 def delete_user(user_id):
     admin_id = oid(session.get("user", {}).get("id"))
     if user_id == admin_id:
-        flash("You cannot delete your own active administrator account.", "error")
+        flash("You cannot archive your own active administrator account.", "error")
         return redirect(url_for("user_mgmt.index"))
 
     db = get_db()
@@ -100,15 +101,15 @@ def delete_user(user_id):
         if not u:
             flash("User not found.", "error")
         elif u.get("role") == "admin":
-            flash("Cannot delete an administrator account directly.", "error")
+            flash("Cannot archive an administrator account directly.", "error")
         else:
-            cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
+            cur.execute("UPDATE users SET is_deleted=1, deleted_at=%s WHERE id=%s", (now_utc().replace(tzinfo=None), user_id))
             db.commit()
             try:
-                log_activity(db, admin_id, "delete_user", f"Deleted user {u.get('email')}", "user", user_id)
+                log_activity(db, admin_id, "archive_user", f"Archived user {u.get('email')}", "user", user_id)
             except Exception:
                 pass
-            flash("User deleted successfully.", "success")
+            flash("User archived successfully.", "success")
         cur.close()
     finally:
         db.close()
@@ -118,14 +119,24 @@ def delete_user(user_id):
 @user_mgmt_bp.route("/backup")
 @role_required("admin")
 def backup_db():
-    backup_path = backup_database("uploads/backup.sql")
-    with open(backup_path, "rb") as handle:
-        content = handle.read()
-    return Response(
-        content,
-        mimetype="application/sql",
-        headers={"Content-Disposition": f"attachment; filename={os.path.basename(backup_path)}"}
-    )
+    try:
+        timestamp = now_utc().strftime("%Y%m%d_%H%M%S")
+        filename = f"db_backup_{config.MYSQL_DB}_{timestamp}.sql"
+        upload_dir = current_app.config.get("UPLOAD_FOLDER", "uploads")
+        os.makedirs(upload_dir, exist_ok=True)
+        output_path = os.path.join(upload_dir, filename)
+
+        backup_path = backup_database(output_path)
+        with open(backup_path, "rb") as handle:
+            content = handle.read()
+        return Response(
+            content,
+            mimetype="application/sql",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+    except Exception as exc:
+        flash(f"Database backup failed: {exc}", "error")
+        return redirect(url_for("user_mgmt.index"))
 
 
 @user_mgmt_bp.route("/restore", methods=["POST"])
@@ -139,26 +150,9 @@ def restore_db():
 
     try:
         sql_text = file_storage.read().decode("utf-8")
-        cmd = [
-            "mysql",
-            "--host", config.MYSQL_HOST,
-            "--port", str(config.MYSQL_PORT),
-            "--user", config.MYSQL_USER,
-        ]
-        if config.MYSQL_PASSWORD:
-            cmd.append(f"--password={config.MYSQL_PASSWORD}")
-        cmd.append(config.MYSQL_DB)
-
-        subprocess.run(
-            cmd,
-            input=sql_text,
-            text=True,
-            check=True,
-        )
+        restore_database(sql_text)
         flash("Database restore completed successfully.", "success")
-    except FileNotFoundError:
-        flash("The MySQL client utility is not available on this server host path.", "error")
-    except subprocess.CalledProcessError as exc:
+    except Exception as exc:
         flash(f"Database restore failed: {exc}", "error")
 
     return redirect(url_for("user_mgmt.index"))

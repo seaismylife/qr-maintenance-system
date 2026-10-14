@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, abort
 from models import get_db, status_badge, oid, now_utc, log_activity
 from routes.decorators import role_required
 from models.security import csrf_protect
@@ -119,10 +119,13 @@ def index():
             reported_by = req_doc.get("reported_by")
             tech_id = req_doc.get("technician_id")
 
-            # If user is technician and request unassigned, assign to self
-            if user_role == "technician" and status in ("In Progress", "Completed - Pending Verification"):
-                cur.execute("UPDATE maintenance_requests SET technician_id = COALESCE(technician_id, %s) WHERE id=%s", (logged_user.get("id"), req_oid))
-                tech_id = tech_id or logged_user.get("id")
+            # Authorization guard:
+            # Technicians can ONLY update tasks that have been assigned to them by Admin.
+            # Unassigned tasks or tasks assigned to other technicians cannot be modified.
+            if user_role == "technician":
+                if not tech_id or oid(tech_id) != oid(logged_user.get("id")):
+                    cur.close()
+                    abort(403)
 
             # If admin also selected technician in this form
             if user_role == "admin" and "technician_id" in request.form:
@@ -255,17 +258,38 @@ def index():
             cur.close()
             return redirect(url_for("requests.index"))
 
-        cur.execute(
-            "SELECT r.*, e.name AS equipment_name, e.location AS equipment_location, "
-            "u.name AS reporter_name, tech.name AS technician_name, tech.email AS technician_email "
-            "FROM maintenance_requests r "
-            "LEFT JOIN equipment e ON r.equipment_id = e.id "
-            "LEFT JOIN users u ON r.reported_by = u.id "
-            "LEFT JOIN users tech ON r.technician_id = tech.id "
-            "LEFT JOIN maintenance_logs ml ON r.id = ml.request_id "
-            "WHERE r.status NOT IN ('Resolved', 'Rejected') AND ml.id IS NULL AND (r.is_deleted IS NULL OR r.is_deleted=0) "
-            "ORDER BY (CASE WHEN r.status = 'Completed - Pending Verification' THEN 0 WHEN r.status = 'In Progress' THEN 1 ELSE 2 END), r.id DESC"
-        )
+        logged_user = session.get("user", {})
+        user_role = logged_user.get("role")
+        user_id = oid(logged_user.get("id"))
+
+        if user_role == "technician":
+            cur.execute(
+                "SELECT r.*, e.name AS equipment_name, e.location AS equipment_location, "
+                "u.name AS reporter_name, tech.name AS technician_name, tech.email AS technician_email "
+                "FROM maintenance_requests r "
+                "LEFT JOIN equipment e ON r.equipment_id = e.id "
+                "LEFT JOIN users u ON r.reported_by = u.id "
+                "LEFT JOIN users tech ON r.technician_id = tech.id "
+                "LEFT JOIN maintenance_logs ml ON r.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted=0) "
+                "WHERE r.status NOT IN ('Resolved', 'Rejected') AND ml.id IS NULL AND (r.is_deleted IS NULL OR r.is_deleted=0) "
+                "AND r.technician_id = %s "
+                "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), "
+                "(CASE WHEN r.status = 'Completed - Pending Verification' THEN 0 WHEN r.status = 'In Progress' THEN 1 ELSE 2 END), r.id DESC",
+                (user_id,)
+            )
+        else:
+            cur.execute(
+                "SELECT r.*, e.name AS equipment_name, e.location AS equipment_location, "
+                "u.name AS reporter_name, tech.name AS technician_name, tech.email AS technician_email "
+                "FROM maintenance_requests r "
+                "LEFT JOIN equipment e ON r.equipment_id = e.id "
+                "LEFT JOIN users u ON r.reported_by = u.id "
+                "LEFT JOIN users tech ON r.technician_id = tech.id "
+                "LEFT JOIN maintenance_logs ml ON r.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted=0) "
+                "WHERE r.status NOT IN ('Resolved', 'Rejected') AND ml.id IS NULL AND (r.is_deleted IS NULL OR r.is_deleted=0) "
+                "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), "
+                "(CASE WHEN r.status = 'Completed - Pending Verification' THEN 0 WHEN r.status = 'In Progress' THEN 1 ELSE 2 END), r.id DESC"
+            )
         rows = cur.fetchall()
 
         cur.execute("SELECT id, name, email FROM users WHERE role='technician' AND (is_deleted IS NULL OR is_deleted=0) ORDER BY name ASC")

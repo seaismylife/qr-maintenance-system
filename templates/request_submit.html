@@ -14,8 +14,13 @@
         <p><strong>Equipment:</strong> {{ equipment.name|clean if equipment.name else 'Not selected' }} | {{ equipment.location|clean if equipment.location else '-' }}</p>
         <label>Issue Description</label>
         <textarea name="description" rows="4" required></textarea>
-        <label>Urgency</label>
-        <select name="urgency"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
+        <label>Priority / Urgency Level</label>
+        <select name="urgency">
+            <option value="High">High Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="Low">Low Priority</option>
+            <option value="Critical">Critical Priority</option>
+        </select>
         <label>Image (optional)</label>
         <input type="file" name="image" accept="image/*">
         <button type="submit">Submit Request</button>

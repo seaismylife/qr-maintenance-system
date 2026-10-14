@@ -109,12 +109,12 @@
 
         <label>Issue description</label>
         <textarea name="description" rows="4" required placeholder="Describe the problem…"></textarea>
-        <label>Urgency</label>
+        <label>Priority / Urgency Level</label>
         <select name="urgency">
-            <option>Low</option>
-            <option selected>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
+            <option value="High">High Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="Low">Low Priority</option>
+            <option value="Critical">Critical Priority</option>
         </select>
         <label>Photo (optional)</label>
         <input type="file" name="image" accept="image/*" capture="environment">

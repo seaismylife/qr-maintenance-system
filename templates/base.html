@@ -94,7 +94,7 @@
             {% if user.role in ['admin', 'technician'] %}
             <a href="{{ url_for('requests.index') }}" class="nav-item {{ 'active' if request.endpoint == 'requests.index' else '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                <span>Maintenance Requests</span>
+                <span>{{ 'Assigned Tasks' if user.role == 'technician' else 'Maintenance Requests' }}</span>
             </a>
             <a href="{{ url_for('logbook.index') }}" class="nav-item {{ 'active' if request.endpoint == 'logbook.index' else '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -123,7 +123,7 @@
             <div class="nav-section-label">Administration</div>
             <a href="{{ url_for('reports.index') }}" class="nav-item {{ 'active' if request.endpoint == 'reports.index' else '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                <span>Diagnostic Reports</span>
+                <span>Reports &amp; Analytics</span>
             </a>
             <a href="{{ url_for('user_mgmt.index') }}" class="nav-item {{ 'active' if request.endpoint == 'user_mgmt.index' else '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -160,6 +160,13 @@
             </div>
 
             <div class="topbar-actions">
+                <!-- Real-Time System Clock -->
+                <div class="topbar-live-clock" id="topbarLiveClock" title="Real-Time System Clock (GMT+8 / PHT)">
+                    <span class="live-clock-dot"></span>
+                    <span class="live-clock-date" id="liveClockDate"></span>
+                    <span class="live-clock-time" id="liveClockTime"></span>
+                </div>
+
                 <!-- Theme Switch -->
                 <label class="theme-switch" aria-label="Toggle Dark Mode" title="Toggle Dark/Light Mode">
                     <input type="checkbox" id="theme-toggle">

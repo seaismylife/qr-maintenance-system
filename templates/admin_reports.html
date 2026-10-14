@@ -628,8 +628,8 @@ body.doc-preview-active .stat-card::before {
     </div>
     
     <div class="doc-title-box">
-        <h2>Official Equipment Maintenance &amp; Technician Diagnostics Report</h2>
-        <p>Comprehensive Institutional Asset Performance, Repair Turnaround &amp; Workload Audit</p>
+        <h2>Equipment Maintenance &amp; Analytical Report</h2>
+        <p>Laboratory Equipment Performance, Technician Workload &amp; Maintenance Summary</p>
     </div>
 
     <!-- Administrative Control Information -->
@@ -637,14 +637,14 @@ body.doc-preview-active .stat-card::before {
         <tr>
             <td style="width:25%;"><strong>Document Ref:</strong> {{ doc_metadata.ref_no }}</td>
             <td style="width:25%;"><strong>Coverage Period:</strong> {{ from_str }} to {{ to_str }}</td>
-            <td style="width:25%;"><strong>Generated At:</strong> {{ doc_metadata.generated_at }}</td>
+            <td style="width:25%;"><strong>Generated At:</strong> <span id="reportGeneratedLive">{{ doc_metadata.generated_at }}</span></td>
             <td style="width:25%;"><strong>Prepared By:</strong> {{ doc_metadata.prepared_by }}</td>
         </tr>
         <tr>
-            <td><strong>Laboratory Facility:</strong> {{ lab if lab else 'All Laboratories (Comprehensive)' }}</td>
-            <td><strong>Category Filter:</strong> {{ category if category else 'All Categories' }}</td>
-            <td><strong>Status Filter:</strong> {{ status if status else 'All Statuses' }}</td>
-            <td><strong>Resolution Success Rate:</strong> {{ resolution_rate }}%</td>
+            <td><strong>Laboratory:</strong> {{ lab if lab else 'All Laboratories' }}</td>
+            <td><strong>Category:</strong> {{ category if category else 'All Categories' }}</td>
+            <td><strong>Status:</strong> {{ status if status else 'All Statuses' }}</td>
+            <td><strong>Completion Rate:</strong> {{ resolution_rate }}%</td>
         </tr>
     </table>
 </div>
@@ -655,29 +655,23 @@ body.doc-preview-active .stat-card::before {
 <div class="card no-print">
     <div class="card-header">
         <div>
-            <h2>Report Parameters &amp; Diagnostic Filters</h2>
-            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;">Filter maintenance audits by specific computer laboratory, timely month, date range, or equipment category.</p>
+            <h2>Report Filters</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;">Filter maintenance records by laboratory, month, date range, technician, or equipment category.</p>
         </div>
         <div class="btn-row" style="margin:0;">
-            {% set qs = request.args.copy() %}
-            {% set _ = qs.update({'export': 'csv'}) %}
-            <a class="btn secondary" href="?{{ qs|urlencode }}">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Export CSV
-            </a>
             <button type="button" class="btn secondary" id="previewDocBtn" onclick="toggleDocumentPreview()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                Preview Document Format
+                Preview Official Format
             </button>
             <button type="button" class="btn" onclick="window.print()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Print Formal Document / Save PDF
+                Print Report / Save PDF
             </button>
         </div>
     </div>
     <form method="get" class="row-2">
         <div>
-            <label for="f_month">Timely Reporting Month</label>
+            <label for="f_month">Month</label>
             <select id="f_month" name="month">
                 <option value="">Custom Date Range Below</option>
                 {% for am in available_months %}
@@ -686,31 +680,31 @@ body.doc-preview-active .stat-card::before {
             </select>
         </div>
         <div>
-            <label for="f_lab">Select Laboratory Facility</label>
+            <label for="f_lab">Computer Laboratory</label>
             <select id="f_lab" name="lab">
-                <option value="">All Laboratories (Comprehensive)</option>
+                <option value="">All Laboratories</option>
                 {% for l in locations %}
                     <option value="{{ l }}" {{ 'selected' if lab == l else '' }}>{{ l }}</option>
                 {% endfor %}
             </select>
         </div>
         <div>
-            <label for="f_tech">Technician Dossier Focus</label>
+            <label for="f_tech">Filter by Technician</label>
             <select id="f_tech" name="technician_id">
-                <option value="">All Technicians (Institutional Overview)</option>
+                <option value="">All Technicians</option>
                 {% for t in technicians_list %}
                     <option value="{{ t.id }}" {{ 'selected' if technician_id == t.id else '' }}>{{ t.name|clean }} ({{ t.email|clean }})</option>
                 {% endfor %}
             </select>
         </div>
         <div>
-            <label for="f_window">Problem Analytics Window</label>
+            <label for="f_window">Time Window</label>
             <select id="f_window" name="time_window">
                 <option value="30" {{ 'selected' if time_window == '30' else '' }}>Last 30 Days (Past Month)</option>
                 <option value="60" {{ 'selected' if time_window == '60' else '' }}>Last 60 Days (2 Months)</option>
                 <option value="90" {{ 'selected' if time_window == '90' or not time_window else '' }}>Last 90 Days (Quarterly Default)</option>
                 <option value="180" {{ 'selected' if time_window == '180' else '' }}>Last 180 Days (Half-Year)</option>
-                <option value="365" {{ 'selected' if time_window == '365' else '' }}>Last 365 Days (Annual)</option>
+                <option value="365" {{ 'selected' if time_window == '365' else '' }}>Last 365 Days (1 Year)</option>
                 <option value="all" {{ 'selected' if time_window == 'all' else '' }}>All Time History</option>
             </select>
         </div>
@@ -741,7 +735,7 @@ body.doc-preview-active .stat-card::before {
             </select>
         </div>
         <div style="grid-column: 1 / -1; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <button type="submit" class="btn">Generate Report</button>
+            <button type="submit" class="btn">Apply Filter</button>
             <a href="{{ url_for('reports.index') }}" class="btn secondary">Reset Filters</a>
             
             <!-- Quick Laboratory Selector Jump Pills -->
@@ -757,31 +751,32 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 1.0: EXECUTIVE SUMMARY & OPERATIONAL KPIS
+     SECTION 1.0: SUMMARY OVERVIEW
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">1.0</span>
-        Executive Summary &amp; Operational KPIs
+        Summary Overview
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Quick snapshot of total maintenance requests, completed repairs, items currently under repair, and average repair speed.</p>
     <div class="grid">
         <div class="stat-card">
-            <h3>Total Incidents Logged</h3>
+            <h3>Total Requests Logged</h3>
             <strong>{{ total_req }}</strong>
-            <p>{{ total_equipment }} active lab assets</p>
+            <p>{{ total_equipment }} active lab items</p>
         </div>
         <div class="stat-card">
-            <h3>Repairs Completed</h3>
+            <h3>Completed Repairs</h3>
             <strong style="color:var(--success, #10b981);">{{ resolved_req }}</strong>
-            <p>{{ resolution_rate }}% resolution success rate</p>
+            <p>{{ resolution_rate }}% completion rate</p>
         </div>
         <div class="stat-card">
-            <h3>Active / Ongoing Work</h3>
+            <h3>Under Repair / Pending</h3>
             <strong style="color:var(--warning, #f59e0b);">{{ in_progress_req + pending_req }}</strong>
             <p>{{ in_progress_req }} in progress &middot; {{ pending_req }} pending</p>
         </div>
         <div class="stat-card">
-            <h3>Average Turnaround</h3>
+            <h3>Average Repair Time</h3>
             <strong>{{ avg_res_str }}</strong>
             <p>Avg response: {{ avg_resp_str }}</p>
         </div>
@@ -789,19 +784,20 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 2.0: MONTHLY INCIDENT & RESOLUTION ANALYSIS
+     SECTION 2.0: MONTHLY REPAIRS SUMMARY
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">2.0</span>
-        Monthly Incident &amp; Resolution Performance Breakdown
+        Monthly Repairs Summary
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Shows the total repair requests reported and completed across each calendar month.</p>
 
     <!-- Monthly Trend Chart (Screen View) -->
     <div class="card no-print" style="margin-bottom:16px;">
         <div class="card-header">
-            <h2>Monthly Request Inflow Trends</h2>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Visual volume of reported maintenance issues across timely calendar months</p>
+            <h2>Monthly Requests Overview</h2>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Visual comparison of reported issues vs. resolved equipment per month</p>
         </div>
         <canvas id="monthChart" style="max-height: 240px;"></canvas>
     </div>
@@ -811,13 +807,13 @@ body.doc-preview-active .stat-card::before {
         <table>
             <thead>
                 <tr>
-                    <th>Reporting Month</th>
+                    <th>Month</th>
                     <th style="text-align:center;">Total Requests</th>
-                    <th style="text-align:center;">Resolved / Fixed</th>
+                    <th style="text-align:center;">Completed</th>
                     <th style="text-align:center;">In Progress</th>
                     <th style="text-align:center;">Pending</th>
-                    <th style="text-align:right;">Resolution Rate</th>
-                    <th style="text-align:right;">Avg. Fix Duration</th>
+                    <th style="text-align:right;">Completion Rate</th>
+                    <th style="text-align:right;">Avg. Repair Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -847,57 +843,58 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 3.0: LABORATORY FACILITY ASSET & DIAGNOSTIC AUDIT
+     SECTION 3.0: COMPUTER LABORATORY STATUS
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">3.0</span>
         {% if lab_stats %}
-            {{ lab_stats.name }} — Specific Facility Inventory &amp; Diagnostic Audit
+            {{ lab_stats.name }} — Equipment Status &amp; Repair History
         {% else %}
-            Laboratory Facility Diagnostics &amp; Operational Readiness Overview
+            Computer Laboratory Status Overview
         {% endif %}
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Overview of working, under-repair, and damaged computers across CICT computer laboratories.</p>
 
     {% if lab_stats %}
-    <!-- Specific Laboratory Diagnostic Dashboard -->
+    <!-- Specific Laboratory Status Dashboard -->
     <div style="margin-bottom: 20px;">
         <div class="grid" style="margin-bottom: 16px;">
             <div class="stat-card">
-                <h3>Stationed Equipment</h3>
+                <h3>Total Equipment</h3>
                 <strong>{{ lab_stats.total }}</strong>
-                <p>Hardware stationed in {{ lab_stats.name }}</p>
+                <p>Items stationed in {{ lab_stats.name }}</p>
             </div>
             <div class="stat-card">
-                <h3>Operational Readiness</h3>
+                <h3>Working Rate</h3>
                 <strong style="color:var(--success, #10b981);">{{ lab_stats.readiness }}%</strong>
-                <p>{{ lab_stats.working }} functioning properly</p>
+                <p>{{ lab_stats.working }} working properly</p>
             </div>
             <div class="stat-card">
-                <h3>Under Repair / Service</h3>
+                <h3>Currently Under Repair</h3>
                 <strong style="color:var(--warning, #f59e0b);">{{ lab_stats.maintenance }}</strong>
-                <p>Active maintenance in lab</p>
+                <p>Active maintenance in this lab</p>
             </div>
             <div class="stat-card">
-                <h3>Not Working / Defective</h3>
+                <h3>Needs Immediate Repair</h3>
                 <strong style="color:var(--danger, #ef4444);">{{ lab_stats.damaged }}</strong>
-                <p>Requires immediate attention</p>
+                <p>Reported broken or defective</p>
             </div>
         </div>
 
         <!-- All Items Stationed in this Lab -->
         <h3 style="font-size:0.95rem;font-weight:800;margin:18px 0 10px;color:var(--text);display:flex;align-items:center;justify-content:space-between;">
-            <span>Hardware Assets Stationed in {{ lab_stats.name }} (All {{ lab_stats.total }} Items)</span>
-            <span style="font-size:0.8rem;font-weight:500;color:var(--text-muted);">Official Room Manifest</span>
+            <span>Equipment Stationed in {{ lab_stats.name }} ({{ lab_stats.total }} Items)</span>
+            <span style="font-size:0.8rem;font-weight:500;color:var(--text-muted);">Lab Equipment List</span>
         </h3>
         <div class="table-wrap">
             <table class="doc-table">
                 <thead>
                     <tr>
-                        <th style="width:30%;">Equipment Asset Name</th>
+                        <th style="width:30%;">Equipment Name</th>
                         <th style="width:20%;">Category</th>
-                        <th style="width:15%;text-align:center;">Condition Status</th>
-                        <th style="width:10%;text-align:center;">Incidents</th>
+                        <th style="width:15%;text-align:center;">Status</th>
+                        <th style="width:10%;text-align:center;">Reports</th>
                         <th style="width:10%;text-align:center;">Fixed</th>
                         <th style="width:15%;text-align:right;">Last Reported</th>
                     </tr>
@@ -939,17 +936,17 @@ body.doc-preview-active .stat-card::before {
         <!-- Maintenance History for this specific lab -->
         {% if lab_history %}
         <h3 style="font-size:0.95rem;font-weight:800;margin:24px 0 10px;color:var(--text);">
-            Specific Maintenance &amp; Repair History for {{ lab_stats.name }}
+            Repair History for {{ lab_stats.name }}
         </h3>
         <div class="table-wrap">
             <table class="doc-table">
                 <thead>
                     <tr>
-                        <th style="width:22%;">Asset Name</th>
+                        <th style="width:22%;">Equipment Name</th>
                         <th style="width:22%;">Issue Reported</th>
                         <th style="width:10%;text-align:center;">Status</th>
-                        <th style="width:14%;">Assigned Tech</th>
-                        <th style="width:12%;text-align:center;">Fix Time</th>
+                        <th style="width:14%;">Technician</th>
+                        <th style="width:12%;text-align:center;">Repair Duration</th>
                         <th style="width:20%;">Action Taken</th>
                     </tr>
                 </thead>
@@ -976,13 +973,13 @@ body.doc-preview-active .stat-card::before {
         <table class="doc-table">
             <thead>
                 <tr>
-                    <th style="width:28%;">Laboratory Facility</th>
-                    <th style="width:14%;text-align:center;">Total Assets</th>
+                    <th style="width:28%;">Computer Laboratory</th>
+                    <th style="width:14%;text-align:center;">Total Equipment</th>
                     <th style="width:14%;text-align:center;">Working</th>
                     <th style="width:14%;text-align:center;">Under Repair</th>
                     <th style="width:14%;text-align:center;">Not Working</th>
-                    <th style="width:16%;text-align:center;">Operational Readiness</th>
-                    <th style="width:15%;text-align:right;" class="no-print">Facility Audit</th>
+                    <th style="width:16%;text-align:center;">Working Rate</th>
+                    <th style="width:15%;text-align:right;" class="no-print">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -1002,7 +999,7 @@ body.doc-preview-active .stat-card::before {
                     </td>
                     <td style="text-align:right;" class="no-print">
                         <a href="{{ url_for('reports.index', lab=ls.location) }}" class="btn secondary btn-sm" style="padding:4px 8px;font-size:0.75rem;">
-                            Audit {{ ls.location }} &rarr;
+                            View Details &rarr;
                         </a>
                     </td>
                 </tr>
@@ -1018,13 +1015,13 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 4.0: PROBLEM IDENTIFICATION & PROBLEMATIC DEVICE ANALYTICS
+     SECTION 4.0: EQUIPMENT NEEDING FREQUENT REPAIR
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div>
             <span class="doc-section-num">4.0</span>
-            Problem Identification &amp; Problematic Device Analytics
+            Equipment Needing Frequent Repair
         </div>
         <div class="no-print" style="display:flex; gap:6px; align-items:center; font-size:0.8rem; font-weight:normal;">
             <span style="color:var(--text-muted); font-weight:600;">Time Window:</span>
@@ -1037,48 +1034,49 @@ body.doc-preview-active .stat-card::before {
             {% endfor %}
         </div>
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Identifies computers and peripherals with 2 or more repairs so staff know which items may need replacement parts.</p>
 
     <!-- Analytics KPI Cards -->
     <div class="grid grid-3-col" style="margin-bottom: 18px;">
         <div class="stat-card">
-            <h3>Problematic Devices Identified</h3>
+            <h3>Equipment with 2+ Breakdowns</h3>
             <strong style="color:var(--danger, #ef4444);">
                 {{ problematic_devices|selectattr('failure_count', 'ge', 2)|list|length }}
             </strong>
-            <p>Assets with &ge; 2 failures in {{ time_window if time_window != 'all' else 'all-time' }} days</p>
+            <p>Equipment with &ge; 2 repairs in {{ time_window if time_window != 'all' else 'all-time' }} days</p>
         </div>
         <div class="stat-card">
-            <h3>High-Failure Alert (Critical)</h3>
+            <h3>High Priority (3+ Breakdowns)</h3>
             <strong style="color:var(--danger, #ef4444);">
                 {{ problematic_devices|selectattr('failure_count', 'ge', 3)|list|length }}
             </strong>
-            <p>Critical repeat failure threshold (&ge; 3 incidents)</p>
+            <p>Critical repeat breakdowns (&ge; 3 reports)</p>
         </div>
         <div class="stat-card">
-            <h3>Top Failing Component</h3>
+            <h3>Most Common Broken Part</h3>
             <strong style="font-size:1.15rem; color:var(--text);">
-                {{ component_failures[0].component|clean if component_failures else 'N/A' }}
+                {{ component_failures[0].component|clean if component_failures else 'None' }}
             </strong>
-            <p>{{ component_failures[0].failure_count if component_failures else 0 }} breakdown tickets</p>
+            <p>{{ component_failures[0].failure_count if component_failures else 0 }} repair reports logged</p>
         </div>
     </div>
 
     <!-- Problematic Hardware Devices Table -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text); display:flex; justify-content:space-between; align-items:center;">
-        <span>Flagged Problematic Equipment Assets (Repair Frequency Aggregate)</span>
-        <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Window: {{ time_window }} days &middot; Threshold: &ge; 2 Failures</span>
+        <span>Equipment with Multiple Repair Records</span>
+        <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Filter: {{ time_window }} days &middot; 2 or more repairs</span>
     </h4>
     <div class="table-wrap" style="margin-bottom: 20px;">
         <table class="doc-table problematic-table">
             <thead>
                 <tr>
-                    <th style="width:22%;">Equipment Asset</th>
-                    <th style="width:14%;">Designated Lab</th>
+                    <th style="width:22%;">Equipment Name</th>
+                    <th style="width:14%;">Lab Location</th>
                     <th style="width:13%;">Category</th>
-                    <th style="width:13%; text-align:center;">Repair Frequency</th>
-                    <th style="width:13%; text-align:center;">Alert Status</th>
-                    <th style="width:12%; text-align:center;">Current State</th>
-                    <th style="width:13%; text-align:right;">Last Failure</th>
+                    <th style="width:13%; text-align:center;">Total Repairs</th>
+                    <th style="width:13%; text-align:center;">Priority</th>
+                    <th style="width:12%; text-align:center;">Current Status</th>
+                    <th style="width:13%; text-align:right;">Last Reported Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -1115,7 +1113,7 @@ body.doc-preview-active .stat-card::before {
                 {% else %}
                 <tr>
                     <td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);">
-                        No equipment assets exceed high failure frequencies within the selected window. All institutional hardware operational stability within normal limits.
+                        No equipment has broken down multiple times in this period. All lab hardware is functioning well.
                     </td>
                 </tr>
                 {% endfor %}
@@ -1125,29 +1123,29 @@ body.doc-preview-active .stat-card::before {
 
     <!-- Component Failure Patterns Breakdown -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text);">
-        Problem Identification — Component Failure Frequency Across Facilities
+        Frequently Broken Hardware Parts (Mouse, Keyboard, RAM, etc.)
     </h4>
     <div class="table-wrap">
         <table class="doc-table">
             <thead>
                 <tr>
-                    <th style="width:30%;">Vulnerable Hardware Component</th>
-                    <th style="width:18%; text-align:center;">Failure Count</th>
-                    <th style="width:18%; text-align:center;">Distinct Devices</th>
-                    <th style="width:34%;">Impacted Laboratories</th>
+                    <th style="width:30%;">Hardware Part</th>
+                    <th style="width:18%; text-align:center;">Times Broken or Replaced</th>
+                    <th style="width:18%; text-align:center;">Computers Affected</th>
+                    <th style="width:34%;">Affected Labs</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cf in component_failures %}
                 <tr>
                     <td><strong>{{ cf.component|clean }}</strong></td>
-                    <td style="text-align:center;"><span class="badge badge-warning" style="font-weight:700;">{{ cf.failure_count }} breakdowns</span></td>
+                    <td style="text-align:center;"><span class="badge badge-warning" style="font-weight:700;">{{ cf.failure_count }} repairs</span></td>
                     <td style="text-align:center;"><strong>{{ cf.affected_devices }}</strong> devices</td>
                     <td style="font-size:0.84rem; color:var(--text-muted);">{{ cf.affected_labs|clean or 'All Laboratories' }}</td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">No recurring component failure patterns logged.</td>
+                    <td colspan="4" style="text-align:center; padding:16px; color:var(--text-muted);">No recurring broken parts logged.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -1156,16 +1154,16 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 5.0: TECHNICIAN PERFORMANCE, WORKLOAD & INDIVIDUAL REPORTS
+     SECTION 5.0: TECHNICIAN PERFORMANCE & WORKLOAD
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div>
             <span class="doc-section-num">5.0</span>
-            Technician Workload Monitoring &amp; Performance Reporting
+            Technician Performance &amp; Workload
         </div>
         <div class="no-print" style="display:flex; gap:6px; align-items:center;">
-            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Focus Technician:</span>
+            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Filter by Technician:</span>
             <select onchange="window.location.href=this.value;" style="font-size:0.8rem; padding:3px 8px; border-radius:6px;">
                 <option value="{{ url_for('reports.index', lab=lab, time_window=time_window, from=from_str, to=to_str) }}">All Technicians (Overview)</option>
                 {% for t in technicians_list %}
@@ -1176,58 +1174,53 @@ body.doc-preview-active .stat-card::before {
             </select>
         </div>
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Shows repairs assigned to each technician, their completed jobs, and average time to fix equipment.</p>
 
-    <!-- Dedicated Individual Technician Report Dossier (When a technician is selected) -->
+    <!-- Dedicated Individual Technician Report (When a technician is selected) -->
     {% if individual_tech_report %}
     <div class="card" style="margin-bottom:24px; border:2px solid var(--primary); background:rgba(21,71,160,0.02); padding:18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:16px;">
             <div>
-                <span class="badge badge-info" style="font-size:0.75rem; font-weight:700; text-transform:uppercase;">Dedicated Individual Technician Report Dossier</span>
+                <span class="badge badge-info" style="font-size:0.75rem; font-weight:700; text-transform:uppercase;">Individual Technician Summary</span>
                 <h3 style="margin:6px 0 2px; font-size:1.25rem; color:var(--text);">{{ individual_tech_report.technician.name|clean }}</h3>
                 <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">
                     Email: <strong>{{ individual_tech_report.technician.email|clean }}</strong> &middot; Role: <strong>CICT Technical Specialist</strong>
                 </p>
             </div>
             <div class="no-print" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                {% set tech_qs = request.args.copy() %}
-                {% set _ = tech_qs.update({'export': 'tech_csv', 'technician_id': individual_tech_report.technician.id}) %}
-                <a class="btn secondary btn-sm" href="?{{ tech_qs|urlencode }}">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Export Technician CSV
-                </a>
                 <a class="btn secondary btn-sm" href="{{ url_for('reports.index', lab=lab, time_window=time_window, from=from_str, to=to_str) }}">
-                    Back to Institutional Overview
+                    Back to All Technicians
                 </a>
             </div>
         </div>
 
         <div class="grid" style="margin-bottom:18px;">
             <div class="stat-card">
-                <h3>Total Assigned Tickets</h3>
+                <h3>Total Assigned Requests</h3>
                 <strong>{{ individual_tech_report.total_assigned }}</strong>
-                <p>Assigned repair workload</p>
+                <p>Assigned repair tasks</p>
             </div>
             <div class="stat-card">
-                <h3>Repairs Completed</h3>
+                <h3>Completed Repairs</h3>
                 <strong style="color:var(--success, #10b981);">{{ individual_tech_report.completed_repairs }}</strong>
-                <p>{{ individual_tech_report.efficiency_rate }}% Completion Efficiency</p>
+                <p>{{ individual_tech_report.efficiency_rate }}% Completion Rate</p>
             </div>
             <div class="stat-card">
-                <h3>Active In-Progress Tasks</h3>
+                <h3>Currently In Progress</h3>
                 <strong style="color:var(--warning, #f59e0b);">{{ individual_tech_report.in_progress_repairs }}</strong>
-                <p>Currently undergoing repair</p>
+                <p>Currently being serviced</p>
             </div>
             <div class="stat-card">
-                <h3>Average Fix Duration</h3>
+                <h3>Average Time to Fix</h3>
                 <strong style="font-size:1.2rem;">{{ individual_tech_report.avg_duration_str }}</strong>
-                <p>Total fix duration: {{ individual_tech_report.total_duration_str }}</p>
+                <p>Total time spent: {{ individual_tech_report.total_duration_str }}</p>
             </div>
         </div>
 
         <div class="grid report-tables-grid" style="align-items:start; margin-bottom:18px;">
             <!-- Monthly Assigned vs Completed for this Technician -->
             <div>
-                <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Monthly Workload &amp; Resolution Metrics</h4>
+                <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Monthly Repairs Handled</h4>
                 <div class="table-wrap">
                     <table>
                         <thead>
@@ -1262,14 +1255,14 @@ body.doc-preview-active .stat-card::before {
 
             <!-- Laboratory Distribution for this Technician -->
             <div>
-                <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Laboratory Service Distribution</h4>
+                <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Repairs by Computer Lab</h4>
                 <div class="table-wrap">
                     <table>
                         <thead>
                             <tr>
-                                <th>Laboratory Facility</th>
+                                <th>Computer Laboratory</th>
                                 <th style="text-align:center;">Tickets Handled</th>
-                                <th style="text-align:right;">Repairs Resolved</th>
+                                <th style="text-align:right;">Repairs Completed</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1289,7 +1282,7 @@ body.doc-preview-active .stat-card::before {
         </div>
 
         <!-- Individual Detailed Repair Logs -->
-        <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Individual Repair History &amp; Audit Trail for {{ individual_tech_report.technician.name|clean }}</h4>
+        <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:8px; color:var(--text);">Repair Log History for {{ individual_tech_report.technician.name|clean }}</h4>
         <div class="table-wrap">
             <table style="font-size:0.83rem;">
                 <thead>
@@ -1337,24 +1330,24 @@ body.doc-preview-active .stat-card::before {
     </div>
     {% endif %}
     
-    <!-- Institutional Technician Summary Performance Table -->
+    <!-- All Technicians Summary Performance Table -->
     <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:8px; color:var(--text); display:flex; justify-content:space-between; align-items:center;">
-        <span>Institutional Technician Roster Performance Summary</span>
-        <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Assigned vs. Completed Workload</span>
+        <span>All Technicians Summary</span>
+        <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">Workload assigned vs. completed for all technicians</span>
     </h4>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Technician Name</th>
-                    <th>Email Contact</th>
-                    <th style="text-align:center;">Total Assigned</th>
-                    <th style="text-align:center;">Completed Repairs</th>
-                    <th style="text-align:center;">Active Tasks</th>
-                    <th style="text-align:right;">Avg. Turnaround Time</th>
-                    <th style="text-align:right;">Total Logged Fix Time</th>
-                    <th style="text-align:right;">Efficiency Rate</th>
-                    <th style="text-align:right;" class="no-print">Individual Report</th>
+                    <th>Email</th>
+                    <th style="text-align:center;">Assigned</th>
+                    <th style="text-align:center;">Completed</th>
+                    <th style="text-align:center;">In Progress</th>
+                    <th style="text-align:right;">Avg. Repair Time</th>
+                    <th style="text-align:right;">Total Repair Time</th>
+                    <th style="text-align:right;">Completion Rate</th>
+                    <th style="text-align:right;" class="no-print">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -1385,13 +1378,13 @@ body.doc-preview-active .stat-card::before {
                     <td style="text-align:right;" class="no-print">
                         <a href="{{ url_for('reports.index', lab=lab, time_window=time_window, technician_id=t.technician_id, from=from_str, to=to_str) }}" 
                            class="btn secondary btn-sm" style="padding:4px 8px; font-size:0.75rem;">
-                            View Dossier &rarr;
+                            View Details &rarr;
                         </a>
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="9" style="text-align:center;padding:16px;color:var(--text-muted);">No active technicians found in the institution.</td>
+                    <td colspan="9" style="text-align:center;padding:16px;color:var(--text-muted);">No active technicians found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -1400,7 +1393,7 @@ body.doc-preview-active .stat-card::before {
 
     <!-- Detailed List of Fixed Equipment per Technician -->
     <div style="margin-top:16px;">
-        <h4 style="font-size:0.92rem;font-weight:700;margin-bottom:8px;color:var(--text);">Detailed Equipment Repaired by Each Technician</h4>
+        <h4 style="font-size:0.92rem;font-weight:700;margin-bottom:8px;color:var(--text);">Equipment Fixed by Each Technician</h4>
         
         {% for t in tech_stats %}
         <div class="card" style="margin-bottom:12px;padding:14px 18px;">
@@ -1454,18 +1447,19 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 6.0: EQUIPMENT FREQUENCY & CATEGORY BREAKDOWN
+     SECTION 6.0: MOST COMMON EQUIPMENT ISSUES & CATEGORIES
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">6.0</span>
-        Recurring Incident Equipment &amp; Category Vulnerabilities
+        Most Common Equipment Issues &amp; Categories
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Shows which equipment items and categories have the most repair requests.</p>
     <div class="grid report-tables-grid" style="align-items:start;">
         <div class="card">
             <div class="card-header">
-                <h2>Top Equipment Requiring Repairs</h2>
-                <p style="font-size:0.8rem;color:var(--text-muted);">Assets generating frequent maintenance tickets</p>
+                <h2>Most Reported Equipment</h2>
+                <p style="font-size:0.8rem;color:var(--text-muted);">Items generating frequent maintenance tickets</p>
             </div>
             <div class="table-wrap">
                 <table>
@@ -1473,7 +1467,7 @@ body.doc-preview-active .stat-card::before {
                         <tr>
                             <th>Equipment Name</th>
                             <th>Location</th>
-                            <th style="text-align:right;">Incidents</th>
+                            <th style="text-align:right;">Total Reports</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1493,15 +1487,15 @@ body.doc-preview-active .stat-card::before {
 
         <div class="card">
             <div class="card-header">
-                <h2>Issues by Equipment Category</h2>
-                <p style="font-size:0.8rem;color:var(--text-muted);">Asset category failure distribution</p>
+                <h2>Repairs by Equipment Category</h2>
+                <p style="font-size:0.8rem;color:var(--text-muted);">Breakdown of issues across equipment categories</p>
             </div>
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
                             <th>Category</th>
-                            <th style="text-align:right;">Incident Count</th>
+                            <th style="text-align:right;">Total Reports</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1521,13 +1515,14 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 7.0: DETAILED MAINTENANCE & DIAGNOSTIC AUDIT LOG
+     SECTION 7.0: COMPLETE MAINTENANCE LOG HISTORY
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-section">
     <div class="doc-section-title">
         <span class="doc-section-num">7.0</span>
-        Complete Maintenance &amp; Diagnostic Audit Trail ({{ detailed_logs|length }} Records)
+        Complete Maintenance Log History ({{ detailed_logs|length }} Records)
     </div>
+    <p style="font-size:0.84rem;color:var(--text-muted);margin:-8px 0 14px;">Full record of all submitted maintenance tickets, technician actions, and repair duration.</p>
     <div class="table-wrap">
         <table class="audit-trail-table">
             <thead>
@@ -1537,10 +1532,10 @@ body.doc-preview-active .stat-card::before {
                     <th style="width:13%;">Issue Description</th>
                     <th style="width:7%;text-align:center;">Urgency</th>
                     <th style="width:8%;text-align:center;">Status</th>
-                    <th style="width:11%;">Assigned Technician</th>
-                    <th style="width:9%;">Start Date/Time</th>
-                    <th style="width:9%;">Completion Date</th>
-                    <th style="width:6%;text-align:center;">Calculated Duration</th>
+                    <th style="width:11%;">Technician</th>
+                    <th style="width:9%;">Start Date &amp; Time</th>
+                    <th style="width:9%;">Date Completed</th>
+                    <th style="width:6%;text-align:center;">Repair Duration</th>
                     <th style="width:12%;">Action Taken</th>
                 </tr>
             </thead>
@@ -1592,11 +1587,11 @@ body.doc-preview-active .stat-card::before {
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════
-     SECTION 8.0: FORMAL DOCUMENT SIGN-OFF & CERTIFICATION (Print View)
+     SECTION 8.0: REPORT VERIFICATION & SIGNATURES (Print View)
      ════════════════════════════════════════════════════════════════ -->
 <div class="doc-sign-block">
     <div style="font-size:9pt;font-weight:700;text-transform:uppercase;margin-bottom:12pt;border-bottom:1pt solid #000;padding-bottom:3pt;">
-        8.0 Institutional Certification &amp; Signatures
+        8.0 Report Verification &amp; Signatures
     </div>
     <div class="doc-sign-grid">
         <div class="doc-sign-col">

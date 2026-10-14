@@ -3,18 +3,28 @@
 <div class="card">
     <div class="card-header"><h2>Submission history</h2></div>
     <div class="table-wrap">
-    <table><thead><tr><th>Date Reported</th><th>Equipment</th><th>Issue Description</th><th>Urgency</th><th>Status</th><th>Assigned Technician</th></tr></thead><tbody>
+    <table><thead><tr><th>Date Reported</th><th>Equipment</th><th>Issue Description</th><th>Priority</th><th>Status</th><th>Assigned Technician</th></tr></thead><tbody>
     {% for r in rows %}
       <tr>
         <td>{{ format_date(r.date_reported) }}</td>
         <td>
-            <strong>{{ (r.equipment_name or 'Deleted')|clean }}</strong>
+            <strong>{{ (r.equipment_name or 'Archived')|clean }}</strong>
             {% if r.affected_component %}
             <br><span style="font-size:0.75rem;color:var(--primary);font-weight:600;margin-top:2px;display:inline-block;">Part: {{ r.affected_component|clean }}</span>
             {% endif %}
         </td>
         <td>{{ r.description|clean }}</td>
-        <td>{{ r.urgency|clean }}</td>
+        <td>
+            {% if r.urgency == 'Critical' %}
+                <span class="badge badge-danger" style="font-weight:700;">Critical Priority</span>
+            {% elif r.urgency == 'High' %}
+                <span class="badge badge-danger" style="font-weight:700;">High Priority</span>
+            {% elif r.urgency == 'Medium' %}
+                <span class="badge badge-warning" style="font-weight:600;">Medium Priority</span>
+            {% else %}
+                <span class="badge badge-info" style="font-weight:500;">Low Priority</span>
+            {% endif %}
+        </td>
         <td><span class="{{ status_badge(r.status) }}">{{ r.status|clean }}</span></td>
         <td>
             {% if r.technician_name %}

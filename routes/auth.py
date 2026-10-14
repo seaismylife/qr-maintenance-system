@@ -66,7 +66,7 @@ def login():
                     session.clear()
                     session.permanent = remember
                     session["user"] = {
-                        "id": str(user["id"]),
+                        "id": int(user["id"]),
                         "name": user["name"],
                         "email": user["email"],
                         "role": user["role"],

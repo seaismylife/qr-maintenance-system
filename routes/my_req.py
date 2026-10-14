@@ -21,7 +21,7 @@ def index():
                 "JOIN equipment e ON r.equipment_id = e.id "
                 "LEFT JOIN users tech ON r.technician_id = tech.id "
                 "WHERE r.reported_by = %s AND (r.is_deleted IS NULL OR r.is_deleted=0) "
-                "ORDER BY r.date_reported DESC",
+                "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), r.date_reported DESC",
                 (my_id,),
             )
             rows = cur.fetchall()

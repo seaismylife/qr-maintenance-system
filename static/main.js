@@ -131,3 +131,38 @@ function toggleSidebar() {
     }
 }
 
+// ─── Real-Time Live Clock & Dynamic Time Displays ───
+function updateLiveClock() {
+    const now = new Date();
+    
+    // Format date: "Mon, Oct 12, 2026"
+    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    const dateStr = now.toLocaleDateString('en-US', dateOptions);
+    
+    // Format time: "09:58:32 PM"
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    const timeStr = now.toLocaleTimeString('en-US', timeOptions);
+
+    const dateEl = document.getElementById('liveClockDate');
+    const timeEl = document.getElementById('liveClockTime');
+    if (dateEl) dateEl.textContent = dateStr;
+    if (timeEl) timeEl.textContent = timeStr;
+
+    // Elements across pages requesting real-time clock
+    const clocks = document.querySelectorAll('.live-realtime-clock');
+    clocks.forEach(el => {
+        el.textContent = `${dateStr} • ${timeStr}`;
+    });
+
+    const reportTimeEl = document.getElementById('reportGeneratedLive');
+    if (reportTimeEl && !reportTimeEl.dataset.frozen) {
+        reportTimeEl.textContent = `${dateStr} ${timeStr}`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateLiveClock();
+    setInterval(updateLiveClock, 1000);
+});
+
+

@@ -451,6 +451,70 @@ a:hover {
     margin-left: auto;
 }
 
+.topbar-live-clock {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    background: var(--bg-accent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+}
+
+.live-clock-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: liveClockPulse 2s infinite;
+}
+
+@keyframes liveClockPulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.live-clock-date {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.live-clock-time {
+    color: var(--text);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+    .live-clock-date {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar-live-clock {
+        display: none;
+    }
+}
+
+
 /* NO EMPTY HORIZONTAL VOIDS: Container spans 100% full width */
 .container {
     padding: 1.5rem 1.75rem;
@@ -733,6 +797,33 @@ input:focus:not([type="checkbox"]):not([type="radio"]), select:focus, textarea:f
     border-color: var(--primary);
     box-shadow: 0 0 0 3px var(--primary-soft);
     outline: none;
+}
+
+input[type="file"] {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+input[type="file"]::file-selector-button {
+    height: 26px;
+    padding: 0 12px;
+    margin-right: 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg-accent);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: var(--line);
+    color: var(--text);
 }
 
 button, .btn {

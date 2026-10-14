@@ -44,22 +44,39 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Institutional Database Maintenance</h2>
-    </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:16px;background:var(--bg-accent);padding:14px 18px;border-radius:10px;border:1px solid var(--line);">
         <div>
-            <strong style="display:block;font-size:0.9rem;margin-bottom:4px;">Export Database Backup</strong>
-            <a class="btn secondary btn-sm" href="{{ url_for('user_mgmt.backup_db') }}">
+            <h2>Database Backup &amp; Restore</h2>
+            <p style="margin:4px 0 0; font-size:0.84rem; color:var(--text-muted);">
+                Download a full SQL backup of the database or upload a .sql file to restore data.
+            </p>
+        </div>
+    </div>
+    <div style="background:var(--bg-accent); padding:16px 20px; border-radius:10px; border:1px solid var(--line); display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; margin:0;">
+        <!-- Export Section -->
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            <strong style="font-size:0.88rem; color:var(--text); letter-spacing:-0.01em;">Export Database Backup</strong>
+            <a class="btn secondary btn-sm" href="{{ url_for('user_mgmt.backup_db') }}" style="height:38px; min-height:38px; padding:0 14px; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; font-size:0.84rem; font-weight:600;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download .SQL Backup
             </a>
         </div>
-        <div style="border-left:1px solid var(--line);padding-left:16px;">
-            <strong style="display:block;font-size:0.9rem;margin-bottom:4px;">Restore From Backup File</strong>
-            <form method="post" action="{{ url_for('user_mgmt.restore_db') }}" enctype="multipart/form-data" style="display:flex;gap:8px;align-items:center;">
+
+        <!-- Vertical Divider -->
+        <div style="width:1px; background:var(--line); align-self:stretch; min-height:42px; margin:0 4px;"></div>
+
+        <!-- Restore Section -->
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:min(100%, 340px);">
+            <strong style="font-size:0.88rem; color:var(--text); letter-spacing:-0.01em;">Restore From Backup File</strong>
+            <form method="post" action="{{ url_for('user_mgmt.restore_db') }}" enctype="multipart/form-data" style="margin:0; display:flex; gap:10px; align-items:center; flex-wrap:nowrap;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <input type="file" name="backup_file" accept=".sql" required style="font-size:0.82rem;padding:4px;">
-                <button type="submit" class="btn secondary btn-sm" onclick="return confirm('Restoring database will overwrite existing tables. Continue?');">Restore DB</button>
+                <input type="file" name="backup_file" accept=".sql" required 
+                       style="margin:0; font-size:0.82rem; padding:4px 8px; height:38px; min-height:38px; box-sizing:border-box; flex:1; min-width:0; border:1px solid var(--line-strong); border-radius:var(--radius); background:var(--surface); color:var(--text);">
+                <button type="submit" class="btn secondary btn-sm" 
+                        style="margin:0; height:38px; min-height:38px; padding:0 14px; white-space:nowrap; flex-shrink:0; display:inline-flex; align-items:center; gap:6px; font-size:0.84rem; font-weight:600;"
+                        onclick="return confirm('Restoring database will overwrite existing tables. Continue?');">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    Restore DB
+                </button>
             </form>
         </div>
     </div>
@@ -99,9 +116,9 @@
             <td style="font-size:0.85rem;">{{ format_date(u.created_at) }}</td>
             <td style="text-align:right;">
                 {% if u.role != 'admin' %}
-                    <form method="post" action="{{ url_for('user_mgmt.delete_user', user_id=u.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete user \'{{ u.email|clean }}\'?');">
+                    <form method="post" action="{{ url_for('user_mgmt.delete_user', user_id=u.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to archive user \'{{ u.email|clean }}\'?');">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn danger btn-sm">Delete</button>
+                        <button type="submit" class="btn warning btn-sm" style="background:#d97706;border-color:#b45309;color:#fff;">Archive</button>
                     </form>
                 {% else %}
                     <span style="font-size:0.75rem;color:var(--text-muted);">Protected</span>

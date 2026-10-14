@@ -17,7 +17,6 @@ from routes import (
     scan_bp,
     logbook_bp,
     notifications_bp,
-    import_bp,
 )
 
 app = Flask(__name__)
@@ -29,6 +28,8 @@ app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = config.SESSION_COOKIE_SECURE
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
 
 # Ensure uploads directory exists on application start
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
@@ -57,7 +58,7 @@ app.register_blueprint(qr_bp)
 app.register_blueprint(scan_bp)
 app.register_blueprint(logbook_bp)
 app.register_blueprint(notifications_bp)
-app.register_blueprint(import_bp)
+
 
 
 @app.after_request

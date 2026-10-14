@@ -162,7 +162,7 @@ def index():
                        ml.action_taken, tech.name AS technician_name
                 FROM maintenance_requests mr
                 JOIN equipment e ON mr.equipment_id = e.id
-                LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id
+                LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
                 LEFT JOIN users tech ON mr.technician_id = tech.id
                 WHERE e.location = %s AND (mr.is_deleted IS NULL OR mr.is_deleted = 0)
                 ORDER BY mr.date_reported DESC
@@ -266,7 +266,7 @@ def index():
                     THEN TIMESTAMPDIFF(SECOND, mr.date_reported, ml.date_completed) / 3600.0 END) AS avg_hours
             FROM maintenance_requests mr
             JOIN equipment e ON e.id = mr.equipment_id
-            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id
+            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
             WHERE {where_clause}
             GROUP BY DATE_FORMAT(mr.date_reported, '%Y-%m'), DATE_FORMAT(mr.date_reported, '%M %Y')
             ORDER BY m DESC
@@ -300,7 +300,7 @@ def index():
             f"""
             SELECT AVG(TIMESTAMPDIFF(SECOND, mr.date_reported, ml.date_completed) / 3600) AS avg_hours
             FROM maintenance_requests mr
-            JOIN maintenance_logs ml ON mr.id = ml.request_id
+            JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
             JOIN equipment e ON e.id = mr.equipment_id
             WHERE {where_clause}
             """,
@@ -358,7 +358,7 @@ def index():
             FROM users u
             LEFT JOIN maintenance_requests mr ON mr.technician_id = u.id AND (mr.is_deleted IS NULL OR mr.is_deleted = 0)
             LEFT JOIN equipment e ON e.id = mr.equipment_id
-            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id
+            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
             WHERE u.role = 'technician' AND (u.is_deleted IS NULL OR u.is_deleted = 0)
                   AND (mr.id IS NULL OR ({where_clause}))
             GROUP BY u.id, u.name, u.email
@@ -386,7 +386,7 @@ def index():
                 ml.action_taken
             FROM maintenance_requests mr
             JOIN equipment e ON mr.equipment_id = e.id
-            JOIN maintenance_logs ml ON mr.id = ml.request_id
+            JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
             LEFT JOIN users u ON mr.technician_id = u.id
             WHERE mr.status = 'Resolved' AND ({where_clause})
             ORDER BY ml.date_completed DESC
@@ -515,7 +515,7 @@ def index():
                                  WHEN mr.status = 'Resolved' AND ml.date_completed IS NOT NULL
                                  THEN TIMESTAMPDIFF(MINUTE, COALESCE(mr.repair_start, mr.date_reported), ml.date_completed) END) AS total_duration_mins
                     FROM maintenance_requests mr
-                    LEFT JOIN maintenance_logs ml ON ml.request_id = mr.id
+                    LEFT JOIN maintenance_logs ml ON ml.request_id = mr.id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
                     WHERE mr.technician_id = %s AND (mr.is_deleted IS NULL OR mr.is_deleted = 0)
                     """,
                     (technician_id,)
@@ -579,7 +579,7 @@ def index():
                         u.name AS reporter_name
                     FROM maintenance_requests mr
                     JOIN equipment e ON mr.equipment_id = e.id
-                    LEFT JOIN maintenance_logs ml ON ml.request_id = mr.id
+                    LEFT JOIN maintenance_logs ml ON ml.request_id = mr.id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
                     LEFT JOIN users u ON u.id = mr.reported_by
                     WHERE mr.technician_id = %s AND (mr.is_deleted IS NULL OR mr.is_deleted = 0)
                     ORDER BY COALESCE(ml.date_completed, mr.date_reported) DESC
@@ -656,7 +656,7 @@ def index():
                    COALESCE(tech.name, req_tech.name) AS technician_name
             FROM maintenance_requests mr
             JOIN equipment e ON e.id = mr.equipment_id
-            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id
+            LEFT JOIN maintenance_logs ml ON mr.id = ml.request_id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
             LEFT JOIN users tech ON ml.technician_id = tech.id
             LEFT JOIN users req_tech ON mr.technician_id = req_tech.id
             WHERE {where_clause}

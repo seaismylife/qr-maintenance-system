@@ -25,7 +25,7 @@ def admin():
         total_req = fetch_count("SELECT COUNT(*) AS c FROM maintenance_requests WHERE (is_deleted IS NULL OR is_deleted=0)")
         pending_req = fetch_count("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='Pending' AND (is_deleted IS NULL OR is_deleted=0)")
         inprogress_req = fetch_count("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='In Progress' AND (is_deleted IS NULL OR is_deleted=0)")
-        resolved_req = fetch_count("SELECT COUNT(*) AS c FROM maintenance_logs")
+        resolved_req = fetch_count("SELECT COUNT(*) AS c FROM maintenance_logs WHERE (is_deleted IS NULL OR is_deleted=0)")
 
         damaged_top = []
         try:
@@ -61,6 +61,9 @@ def admin():
         try:
             cur.execute("SELECT actor_id, action, details, target_type, target_id, created_at FROM activity_logs ORDER BY created_at DESC LIMIT 15")
             activity_logs = cur.fetchall() or []
+            for log in activity_logs:
+                if isinstance(log.get("created_at"), datetime):
+                    log["created_at"] = log["created_at"].strftime("%b %d, %Y %I:%M %p")
         except Exception:
             pass
 
@@ -78,7 +81,8 @@ def admin():
         try:
             cur.execute(
                 "SELECT AVG(TIMESTAMPDIFF(SECOND, mr.date_reported, ml.date_completed) / 3600) AS avg_hours "
-                "FROM maintenance_requests mr JOIN maintenance_logs ml ON mr.id = ml.request_id"
+                "FROM maintenance_requests mr JOIN maintenance_logs ml ON mr.id = ml.request_id "
+                "WHERE (mr.is_deleted IS NULL OR mr.is_deleted=0) AND (ml.is_deleted IS NULL OR ml.is_deleted=0)"
             )
             avg_res = float((cur.fetchone() or {}).get("avg_hours") or 0.0)
         except Exception:
@@ -120,7 +124,7 @@ def admin():
                 LEFT JOIN maintenance_requests mr ON mr.equipment_id = e.id AND (mr.is_deleted IS NULL OR mr.is_deleted=0) AND mr.status IN ('In Progress', 'Pending')
                 LEFT JOIN users tech ON mr.technician_id = tech.id
                 WHERE (e.is_deleted IS NULL OR e.is_deleted = 0) AND (e.status = 'Under Repair' OR mr.status = 'In Progress')
-                ORDER BY (CASE WHEN mr.repair_start IS NOT NULL THEN mr.repair_start ELSE mr.date_reported END) ASC
+                ORDER BY (CASE WHEN mr.urgency = 'Critical' THEN 0 WHEN mr.urgency = 'High' THEN 1 WHEN mr.urgency = 'Medium' THEN 2 WHEN mr.urgency = 'Low' THEN 3 ELSE 4 END), (CASE WHEN mr.repair_start IS NOT NULL THEN mr.repair_start ELSE mr.date_reported END) ASC
                 """
             )
             under_repair_items = cur.fetchall() or []
@@ -151,7 +155,7 @@ def admin():
                     AVG(CASE WHEN DATE_FORMAT(ml.date_completed, '%Y-%m') = %s AND ml.duration_minutes IS NOT NULL THEN ml.duration_minutes END) AS avg_duration_mins
                 FROM users u
                 LEFT JOIN maintenance_requests mr ON mr.technician_id = u.id AND (mr.is_deleted IS NULL OR mr.is_deleted = 0)
-                LEFT JOIN maintenance_logs ml ON ml.technician_id = u.id
+                LEFT JOIN maintenance_logs ml ON ml.technician_id = u.id AND (ml.is_deleted IS NULL OR ml.is_deleted = 0)
                 WHERE u.role = 'technician' AND (u.is_deleted IS NULL OR u.is_deleted = 0)
                 GROUP BY u.id, u.name, u.email
                 ORDER BY month_completed DESC, month_assigned DESC, u.name ASC
@@ -299,31 +303,24 @@ def technician():
     db = get_db()
     try:
         cur = db.cursor(dictionary=True)
+        user_id = session.get("user", {}).get("id")
         pending_count = 0
         try:
-            cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='Pending' AND (is_deleted IS NULL OR is_deleted=0)")
+            cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='Pending' AND (is_deleted IS NULL OR is_deleted=0) AND technician_id=%s", (user_id,))
             pending_count = (cur.fetchone() or {}).get("c", 0)
         except Exception:
-            try:
-                cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='Pending'")
-                pending_count = (cur.fetchone() or {}).get("c", 0)
-            except Exception:
-                pending_count = 0
+            pending_count = 0
 
         in_progress_count = 0
         try:
-            cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='In Progress' AND (is_deleted IS NULL OR is_deleted=0)")
+            cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='In Progress' AND (is_deleted IS NULL OR is_deleted=0) AND technician_id=%s", (user_id,))
             in_progress_count = (cur.fetchone() or {}).get("c", 0)
         except Exception:
-            try:
-                cur.execute("SELECT COUNT(*) AS c FROM maintenance_requests WHERE status='In Progress'")
-                in_progress_count = (cur.fetchone() or {}).get("c", 0)
-            except Exception:
-                in_progress_count = 0
+            in_progress_count = 0
 
         completed_repairs = 0
         try:
-            cur.execute("SELECT COUNT(*) AS c FROM maintenance_logs")
+            cur.execute("SELECT COUNT(*) AS c FROM maintenance_logs WHERE (is_deleted IS NULL OR is_deleted=0) AND technician_id=%s", (user_id,))
             completed_repairs = (cur.fetchone() or {}).get("c", 0)
         except Exception:
             completed_repairs = 0
@@ -339,7 +336,6 @@ def technician():
             except Exception:
                 total_equipment = 0
 
-        user_id = session.get("user", {}).get("id")
         active_requests = []
         try:
             cur.execute(
@@ -349,7 +345,8 @@ def technician():
                 "LEFT JOIN users u ON r.reported_by = u.id "
                 "LEFT JOIN users tech ON r.technician_id = tech.id "
                 "WHERE r.status IN ('Pending', 'In Progress') AND (r.is_deleted IS NULL OR r.is_deleted=0) "
-                "ORDER BY (CASE WHEN r.technician_id = %s THEN 0 ELSE 1 END), (CASE WHEN r.status = 'Pending' THEN 1 ELSE 2 END), r.id DESC LIMIT 10",
+                "AND r.technician_id = %s "
+                "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), (CASE WHEN r.status = 'Pending' THEN 1 ELSE 2 END), r.id DESC LIMIT 10",
                 (user_id,)
             )
             active_requests = cur.fetchall() or []
@@ -360,8 +357,9 @@ def technician():
                     "u.name AS reporter_name FROM maintenance_requests r "
                     "LEFT JOIN equipment e ON r.equipment_id = e.id "
                     "LEFT JOIN users u ON r.reported_by = u.id "
-                    "WHERE r.status IN ('Pending', 'In Progress') "
-                    "ORDER BY (CASE WHEN r.status = 'Pending' THEN 1 ELSE 2 END), r.id DESC LIMIT 10"
+                    "WHERE r.status IN ('Pending', 'In Progress') AND technician_id = %s "
+                    "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), (CASE WHEN r.status = 'Pending' THEN 1 ELSE 2 END), r.id DESC LIMIT 10",
+                    (user_id,)
                 )
                 active_requests = cur.fetchall() or []
             except Exception:
@@ -375,6 +373,7 @@ def technician():
                 "JOIN equipment e ON ml.equipment_id = e.id "
                 "JOIN maintenance_requests mr ON ml.request_id = mr.id "
                 "LEFT JOIN users u ON mr.reported_by = u.id "
+                "WHERE (ml.is_deleted IS NULL OR ml.is_deleted=0) "
                 "ORDER BY ml.date_completed DESC LIMIT 5"
             )
             recent_logs = cur.fetchall() or []
@@ -447,7 +446,7 @@ def faculty():
                     "SELECT r.*, e.name AS equipment_name, e.location AS equipment_location "
                     "FROM maintenance_requests r JOIN equipment e ON r.equipment_id = e.id "
                     "WHERE r.reported_by=%s AND (r.is_deleted IS NULL OR r.is_deleted=0) "
-                    "ORDER BY r.date_reported DESC LIMIT 5",
+                    "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), r.date_reported DESC LIMIT 5",
                     (my_id,)
                 )
                 recent_requests = cur.fetchall() or []
@@ -457,7 +456,7 @@ def faculty():
                         "SELECT r.*, e.name AS equipment_name, e.location AS equipment_location "
                         "FROM maintenance_requests r JOIN equipment e ON r.equipment_id = e.id "
                         "WHERE r.reported_by=%s "
-                        "ORDER BY r.date_reported DESC LIMIT 5",
+                        "ORDER BY (CASE WHEN r.urgency = 'Critical' THEN 0 WHEN r.urgency = 'High' THEN 1 WHEN r.urgency = 'Medium' THEN 2 WHEN r.urgency = 'Low' THEN 3 ELSE 4 END), r.date_reported DESC LIMIT 5",
                         (my_id,)
                     )
                     recent_requests = cur.fetchall() or []

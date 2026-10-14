@@ -1,20 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- Live Real-Time Dashboard Header -->
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 22px;">
+    <div>
+        <h1 style="font-size:1.45rem; font-weight:800; color:var(--text); margin:0;">Admin Dashboard</h1>
+        <p style="font-size:0.86rem; color:var(--text-muted); margin:3px 0 0;">Overview of computer laboratories, equipment condition, and ongoing repair jobs.</p>
+    </div>
+    <div class="topbar-live-clock" style="padding:6px 14px; font-size:0.84rem;" title="Live Real-Time System Clock">
+        <span class="live-clock-dot"></span>
+        <span style="font-weight:700; color:var(--text);" class="live-realtime-clock">Live Clock Loading...</span>
+    </div>
+</div>
+
 <!-- Top KPI Summary Cards -->
 <div class="grid" style="margin-bottom: 24px;">
     <div class="stat-card">
-        <h3>System Users</h3>
+        <h3>Total Users</h3>
         <strong>{{ total_users }}</strong>
-        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Active accounts</p>
+        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Registered accounts</p>
     </div>
     <div class="stat-card">
-        <h3>Total Equipment Assets</h3>
+        <h3>Total Equipment</h3>
         <strong>{{ total_equipment }}</strong>
-        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Inventory stocks</p>
+        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Monitored lab items</p>
     </div>
     <div class="stat-card">
-        <h3>Maintenance Requests</h3>
+        <h3>Repair Requests</h3>
         <strong>{{ total_req }}</strong>
         <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">
             <span style="color:var(--danger, #ef4444);font-weight:600;">{{ pending_req }} pending</span> &middot;
@@ -22,16 +34,19 @@
         </p>
     </div>
     <div class="stat-card">
-        <h3>Performance Metrics</h3>
-        <strong style="font-size:1.3rem;">{{ avg_resp }}h <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted);">resp</span> / {{ avg_res }}h <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted);">res</span></strong>
-        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Peak failure: <strong>{{ peak_hour_str }}</strong></p>
+        <h3>Average Repair Time</h3>
+        <strong style="font-size:1.3rem;">{{ avg_res }}h <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted);">to fix</span></strong>
+        <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Avg response: <strong>{{ avg_resp }}h</strong> &middot; Busiest hour: <strong>{{ peak_hour_str }}</strong></p>
     </div>
 </div>
 
 <!-- Administration Quick Actions -->
 <div class="card" style="margin-bottom: 24px;">
     <div class="card-header">
-        <h2>Institutional Management Tools</h2>
+        <div>
+            <h2>Quick Actions</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:2px 0 0;">Common administrative tools to manage users, inspect equipment, and view reports.</p>
+        </div>
     </div>
     <div class="btn-row">
         <a class="btn" href="{{ url_for('user_mgmt.index') }}">
@@ -40,7 +55,7 @@
         </a>
         <a class="btn secondary" href="{{ url_for('reports.index') }}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            Advanced Reports &amp; Analytics
+            Reports &amp; Analytics
         </a>
         <a class="btn secondary" href="{{ url_for('equipment.index') }}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -163,29 +178,30 @@
     });
 </script>
 
-<!-- ─── Active Work Tracker: Hardware Under Repair ─── -->
+<!-- ─── Equipment Currently Under Repair ─── -->
 <div class="card" style="margin-bottom: 24px;">
     <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
             <h2 style="display:flex; align-items:center; gap:8px;">
                 <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; display:inline-block; box-shadow:0 0 0 3px rgba(245,158,11,0.25);"></span>
-                Active Work Tracker — Hardware Under Repair
+                Equipment Currently Under Repair
             </h2>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Live monitoring of hardware assets currently being serviced across laboratories</p>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Real-time status of lab computers and devices currently being fixed by technicians</p>
         </div>
-        <span class="badge badge-warning" style="font-size:0.8rem; font-weight:700;">{{ under_repair_items|length }} active job{{ 's' if under_repair_items|length != 1 else '' }}</span>
+        <span class="badge badge-warning" style="font-size:0.8rem; font-weight:700;">{{ under_repair_items|length }} item{{ 's' if under_repair_items|length != 1 else '' }} in repair</span>
     </div>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Equipment Name</th>
+                    <th>Priority</th>
                     <th>Category</th>
-                    <th>Designated Laboratory</th>
-                    <th>Affected Part</th>
-                    <th>Assigned Technician</th>
-                    <th>Service Duration</th>
-                    <th style="text-align:right;">Actions</th>
+                    <th>Lab Location</th>
+                    <th>Problem Part</th>
+                    <th>Technician</th>
+                    <th>Time Under Repair</th>
+                    <th style="text-align:right;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -194,9 +210,20 @@
                     <td>
                         <strong>{{ item.equipment_name|clean }}</strong>
                     </td>
+                    <td>
+                        {% if item.urgency == 'Critical' %}
+                            <span class="badge badge-danger" style="font-weight:700;">Critical</span>
+                        {% elif item.urgency == 'High' %}
+                            <span class="badge badge-danger" style="font-weight:700;">High</span>
+                        {% elif item.urgency == 'Medium' %}
+                            <span class="badge badge-warning" style="font-weight:600;">Medium</span>
+                        {% else %}
+                            <span class="badge badge-info" style="font-weight:500;">Low</span>
+                        {% endif %}
+                    </td>
                     <td><span class="badge badge-info" style="font-size:0.72rem;">{{ item.equipment_category|clean }}</span></td>
                     <td><strong>{{ item.equipment_location|clean }}</strong></td>
-                    <td style="font-size:0.84rem; color:var(--text-muted);">{{ item.affected_component|clean or 'General Set' }}</td>
+                    <td style="font-size:0.84rem; color:var(--text-muted);">{{ item.affected_component|clean or 'General Issue' }}</td>
                     <td>
                         {% if item.technician_name %}
                             <span style="font-weight:600; color:var(--text);">{{ item.technician_name|clean }}</span>
@@ -217,9 +244,9 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="7" style="text-align:center; padding:28px; color:var(--text-muted);">
+                    <td colspan="8" style="text-align:center; padding:28px; color:var(--text-muted);">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:0 auto 8px; color:#10b981;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        All equipment assets are operational. No active hardware under repair at this time.
+                        All equipment is working properly. No active repairs at this time.
                     </td>
                 </tr>
                 {% endfor %}
@@ -228,14 +255,14 @@
     </div>
 </div>
 
-<!-- ─── Monthly Technician Metrics & Problematic Hardware Watchlist ─── -->
+<!-- ─── Monthly Technician Repairs & Frequently Broken Equipment ─── -->
 <div class="grid" style="align-items: start; margin-bottom: 24px;">
-    <!-- Monthly Technician Metrics (Assigned vs Completed) -->
+    <!-- Monthly Technician Repairs -->
     <div class="card">
         <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-                <h2>Monthly Technician Metrics ({{ current_month_label }})</h2>
-                <p style="font-size:0.85rem; color:var(--text-muted);">Assigned workload vs. completed repairs for current month</p>
+                <h2>Technician Repairs This Month ({{ current_month_label }})</h2>
+                <p style="font-size:0.85rem; color:var(--text-muted);">Repairs assigned to and finished by each technician this month</p>
             </div>
             <a href="{{ url_for('reports.index') }}" class="btn secondary btn-sm" style="font-size:0.75rem;">Full Report</a>
         </div>
@@ -247,8 +274,8 @@
                         <th style="text-align:center;">Assigned</th>
                         <th style="text-align:center;">Completed</th>
                         <th style="text-align:center;">In Progress</th>
-                        <th style="text-align:right;">Turnaround</th>
-                        <th style="text-align:right;">Completion Rate</th>
+                        <th style="text-align:right;">Avg. Repair Time</th>
+                        <th style="text-align:right;">Success Rate</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -286,24 +313,24 @@
         </div>
     </div>
 
-    <!-- Problematic Hardware Watchlist -->
+    <!-- Frequently Broken Equipment -->
     <div class="card">
         <div class="card-header">
             <h2 style="display:flex; align-items:center; gap:8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ef4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Problematic Hardware Watchlist
+                Frequently Broken Equipment
             </h2>
-            <p style="font-size:0.85rem; color:var(--text-muted);">Devices flagged for high failure frequencies</p>
+            <p style="font-size:0.85rem; color:var(--text-muted);">Computers and peripherals with 2 or more repairs that may need parts replacement</p>
         </div>
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>Hardware Asset</th>
-                        <th>Laboratory</th>
-                        <th style="text-align:center;">Failures</th>
-                        <th>Recurring Issue / Part</th>
-                        <th style="text-align:right;">Risk Level</th>
+                        <th>Equipment</th>
+                        <th>Lab Location</th>
+                        <th style="text-align:center;">Times Broken</th>
+                        <th>Frequent Problem</th>
+                        <th style="text-align:right;">Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -330,7 +357,7 @@
                     <tr>
                         <td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:0 auto 6px; color:#10b981;"><polyline points="20 6 9 17 4 12"/></svg>
-                            No high-failure hardware devices detected. All equipment stability within normal thresholds.
+                            No high-breakdown equipment detected. All lab equipment is in good condition.
                         </td>
                     </tr>
                     {% endfor %}
@@ -342,17 +369,17 @@
 
 <!-- Lower Detail Grids -->
 <div class="grid" style="align-items: start;">
-    <!-- Recent Activity Log -->
+    <!-- Recent System Activity -->
     <div class="card">
         <div class="card-header">
-            <h2>Recent Audit &amp; Activity Log</h2>
-            <p style="font-size:0.85rem;color:var(--text-muted);">Real-time security and operations journal</p>
+            <h2>Recent System Activity</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);">Recent actions by technicians, custodians, and faculty</p>
         </div>
         <div class="table-wrap table-scroll">
             <table>
                 <thead>
                     <tr>
-                        <th>Timestamp</th>
+                        <th>Date &amp; Time</th>
                         <th>Action</th>
                         <th>Details</th>
                     </tr>
@@ -372,18 +399,18 @@
         </div>
     </div>
 
-    <!-- Top Reported Equipment -->
+    <!-- Most Reported Equipment -->
     <div class="card">
         <div class="card-header">
-            <h2>Top Reported Equipment</h2>
-            <p style="font-size:0.85rem;color:var(--text-muted);">Frequent repair incident triggers</p>
+            <h2>Most Reported Equipment</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);">Equipment items with the highest number of repair requests</p>
         </div>
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
                         <th>Equipment Name</th>
-                        <th style="text-align:right;">Incident Count</th>
+                        <th style="text-align:right;">Total Reports</th>
                     </tr>
                 </thead>
                 <tbody>

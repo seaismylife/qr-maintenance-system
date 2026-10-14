@@ -59,7 +59,7 @@
                 <th>Equipment</th>
                 <th>Location</th>
                 <th>Reporter</th>
-                <th>Urgency</th>
+                <th>Priority</th>
                 <th>Status</th>
                 <th>Assignment</th>
                 <th>Date Reported</th>
@@ -74,18 +74,18 @@
             <td>{{ req.reporter_name|clean if req.reporter_name else 'Unknown' }}</td>
             <td>
                 {% if req.urgency == 'Critical' %}
-                    <span class="badge badge-danger">Critical</span>
+                    <span class="badge badge-danger" style="font-weight:700;">Critical Priority</span>
                 {% elif req.urgency == 'High' %}
-                    <span class="badge badge-warning">High</span>
+                    <span class="badge badge-danger" style="font-weight:700;">High Priority</span>
                 {% elif req.urgency == 'Medium' %}
-                    <span class="badge badge-info">Medium</span>
+                    <span class="badge badge-warning" style="font-weight:600;">Medium Priority</span>
                 {% else %}
-                    <span class="badge">{{ req.urgency|clean }}</span>
+                    <span class="badge badge-info" style="font-weight:500;">Low Priority</span>
                 {% endif %}
             </td>
             <td><span class="{{ status_badge(req.status) }}">{{ req.status|clean }}</span></td>
             <td>
-                {% if user and req.technician_id == user.id %}
+                {% if user and req.technician_id|string == user.id|string %}
                     <span class="badge badge-success" style="font-weight:700;">Assigned to You</span>
                 {% elif req.technician_name %}
                     <span class="badge badge-info">{{ req.technician_name|clean }}</span>
@@ -100,8 +100,8 @@
         </tr>
         {% else %}
         <tr>
-            <td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);">
-                No active maintenance requests! All equipment is running smoothly.
+            <td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted);">
+                No assigned maintenance tasks! All equipment is running smoothly.
             </td>
         </tr>
         {% endfor %}

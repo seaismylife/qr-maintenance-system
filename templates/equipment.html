@@ -64,12 +64,6 @@
     <div class="card-header">
         <h2>Institutional Equipment Inventory ({{ rows|length }})</h2>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            {% if user and user.role == 'admin' %}
-            <a href="{{ url_for('import.equipment_import') }}" class="btn secondary btn-sm">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Bulk Import CSV
-            </a>
-            {% endif %}
             <a href="{{ url_for('qr.print_sheet') }}" class="btn secondary btn-sm" target="_blank">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                 Print QR Codes
@@ -110,9 +104,9 @@
                     <a class="btn secondary btn-sm" href="{{ url_for('qr.download', equipment_id=(row.id or row._id)|string) }}" title="Download QR Code">QR &darr;</a>
                     {% if user and user.role in ['admin', 'custodian'] %}
                     <a class="btn secondary btn-sm" href="{{ url_for('equipment.index', edit=(row.id or row._id)|string) }}">Edit</a>
-                    <form method="post" action="{{ url_for('equipment.delete_equipment', equipment_id=(row.id or row._id)) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete equipment \'{{ row.name|clean }}\'?');">
+                    <form method="post" action="{{ url_for('equipment.delete_equipment', equipment_id=(row.id or row._id)) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to archive equipment \'{{ row.name|clean }}\'?');">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn danger btn-sm">Delete</button>
+                        <button type="submit" class="btn warning btn-sm" style="background:#d97706;border-color:#b45309;color:#fff;">Archive</button>
                     </form>
                     {% endif %}
                 </div>

@@ -92,15 +92,15 @@ def index():
             return redirect(url_for("equipment.index"))
 
         # Fallback query parameter deletion (guarded by role_required)
-        if "delete" in request.args:
+        if "delete" in request.args or "archive" in request.args:
             if user_role not in ("admin", "custodian"):
-                abort(403, "Technicians cannot delete equipment.")
-            del_id = oid(request.args["delete"])
+                abort(403, "Technicians cannot archive equipment.")
+            del_id = oid(request.args.get("archive") or request.args.get("delete"))
             if del_id:
                 cur.execute("UPDATE equipment SET is_deleted=1, deleted_at=%s WHERE id=%s", (now_utc().replace(tzinfo=None), del_id))
                 db.commit()
                 try:
-                    log_activity(db, session.get("user", {}).get("id"), "soft_delete_equipment", f"Soft-deleted equipment id {del_id}", "equipment", del_id)
+                    log_activity(db, session.get("user", {}).get("id"), "archive_equipment", f"Archived equipment id {del_id}", "equipment", del_id)
                 except Exception:
                     pass
             cur.close()
@@ -127,6 +127,7 @@ def index():
 
 @equipment_bp.route("/delete/<int:equipment_id>", methods=["POST"], endpoint="delete")
 @equipment_bp.route("/delete_equipment/<int:equipment_id>", methods=["POST"], endpoint="delete_equipment")
+@equipment_bp.route("/archive/<int:equipment_id>", methods=["POST"], endpoint="archive")
 @role_required("custodian", "admin")
 @csrf_protect
 def delete_equipment(equipment_id):
@@ -137,7 +138,7 @@ def delete_equipment(equipment_id):
         db.commit()
         cur.close()
         try:
-            log_activity(db, session.get("user", {}).get("id"), "soft_delete_equipment", f"Soft-deleted equipment id {equipment_id}", "equipment", equipment_id)
+            log_activity(db, session.get("user", {}).get("id"), "archive_equipment", f"Archived equipment id {equipment_id}", "equipment", equipment_id)
         except Exception:
             pass
     finally:

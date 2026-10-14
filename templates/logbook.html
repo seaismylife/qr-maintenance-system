@@ -56,17 +56,6 @@
         </div>
     </form>
     <div class="btn-row" style="margin-top:16px;">
-        {% set qs = request.args.copy() %}
-        {% set _ = qs.update({'export': 'csv'}) %}
-        <a class="btn secondary" href="?{{ qs|urlencode }}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Export CSV
-        </a>
         <button type="button" class="btn secondary" onclick="window.print()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -88,9 +77,9 @@
         </div>
         {% if logs %}
         <button type="submit" form="deleteLogsForm" class="btn btn-sm"
-            style="background:#ef4444; border-color:#ef4444; display:none;" id="deleteSelectedBtn"
-            onclick="return confirm('Are you sure you want to delete the selected records? The linked requests will revert to Pending.');">
-            Delete Selected (<span id="deleteCount">0</span>)
+            style="background:#d97706; border-color:#b45309; color:#fff; display:none;" id="archiveSelectedBtn"
+            onclick="return confirm('Are you sure you want to archive the selected records? The linked requests will revert to Pending.');">
+            Archive Selected (<span id="archiveCount">0</span>)
         </button>
         {% endif %}
     </div>
@@ -110,12 +99,12 @@
                             onchange="toggleAllLogCheckboxes(this)">
                     </th>
                     {% endif %}
-                    <th>Repair Timeline &amp; Duration</th>
-                    <th>Equipment Asset</th>
+                    <th>Repair Dates &amp; Duration</th>
+                    <th>Equipment Name</th>
                     <th>Laboratory</th>
                     <th>Reported Issue</th>
-                    <th>Technician / Reporter</th>
-                    <th>Resolution &amp; Actions Taken</th>
+                    <th>Technician</th>
+                    <th>Action Taken / Resolution</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,7 +112,7 @@
                 <tr>
                     <td style="text-align:center;" class="no-print">
                         <input type="checkbox" name="log_ids" value="{{ log.log_id }}" class="log-checkbox"
-                            onchange="updateDeleteCount()">
+                            onchange="updateArchiveCount()">
                     </td>
                     <td style="white-space: nowrap; font-size: 0.83rem;">
                         <div><strong style="color:var(--success, #10b981);">Completed:</strong> {{ format_date(log.date_completed) }}</div>
@@ -186,15 +175,15 @@ function toggleAllLogCheckboxes(selectAll) {
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = selectAll.checked;
     }
-    updateDeleteCount();
+    updateArchiveCount();
 }
 
-function updateDeleteCount() {
+function updateArchiveCount() {
     var checked = document.querySelectorAll('.log-checkbox:checked');
-    var btn = document.getElementById('deleteSelectedBtn');
-    var countEl = document.getElementById('deleteCount');
+    var btn = document.getElementById('archiveSelectedBtn') || document.getElementById('deleteSelectedBtn');
+    var countEl = document.getElementById('archiveCount') || document.getElementById('deleteCount');
     if (!btn) return;
-    countEl.textContent = checked.length;
+    if (countEl) countEl.textContent = checked.length;
     btn.style.display = checked.length > 0 ? 'inline-flex' : 'none';
 
     var selectAll = document.getElementById('selectAllLogs');

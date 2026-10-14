@@ -199,21 +199,21 @@
         <!-- Urgency -->
         <div class="form-group" style="margin-bottom:18px;">
             <label style="display:block; font-weight:600; margin-bottom:8px;">
-                Urgency Level <span style="color:#ef4444;">*</span>
+                Priority / Urgency Level <span style="color:#ef4444;">*</span>
             </label>
             {% set selected_urgency = form.get('urgency') or 'Medium' %}
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <label class="urgency-chip chip-low {% if selected_urgency == 'Low' %}chip-active{% endif %}">
-                    <input type="radio" name="urgency" value="Low" {% if selected_urgency == 'Low' %}checked{% endif %}>
-                    <span>Low</span>
+                <label class="urgency-chip chip-high {% if selected_urgency == 'High' %}chip-active{% endif %}">
+                    <input type="radio" name="urgency" value="High" {% if selected_urgency == 'High' %}checked{% endif %}>
+                    <span>High Priority</span>
                 </label>
                 <label class="urgency-chip chip-medium {% if selected_urgency == 'Medium' %}chip-active{% endif %}">
                     <input type="radio" name="urgency" value="Medium" {% if selected_urgency == 'Medium' %}checked{% endif %}>
-                    <span>Medium</span>
+                    <span>Medium Priority</span>
                 </label>
-                <label class="urgency-chip chip-high {% if selected_urgency == 'High' %}chip-active{% endif %}">
-                    <input type="radio" name="urgency" value="High" {% if selected_urgency == 'High' %}checked{% endif %}>
-                    <span>High</span>
+                <label class="urgency-chip chip-low {% if selected_urgency == 'Low' %}chip-active{% endif %}">
+                    <input type="radio" name="urgency" value="Low" {% if selected_urgency == 'Low' %}checked{% endif %}>
+                    <span>Low Priority</span>
                 </label>
             </div>
         </div>
