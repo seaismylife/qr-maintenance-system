@@ -59,12 +59,30 @@ def index():
 
             if existing_id:
                 cur.execute(
+                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
+                    (name, existing_id),
+                )
+                if cur.fetchone():
+                    cur.execute("SELECT * FROM equipment WHERE (is_deleted IS NULL OR is_deleted=0) ORDER BY id DESC")
+                    rows = cur.fetchall()
+                    cur.close()
+                    return render_template("equipment.html", rows=rows, edit_doc=None, status_badge=status_badge, errors=[f"Equipment name \"{name}\" already exists. Please use a different name."]), 400
+                cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
                     (name, category, location, status, existing_id),
                 )
                 eq_id_hex = str(existing_id)
                 action_desc = f"Updated equipment id {existing_id} ({name})"
             else:
+                cur.execute(
+                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND (is_deleted IS NULL OR is_deleted=0)",
+                    (name,),
+                )
+                if cur.fetchone():
+                    cur.execute("SELECT * FROM equipment WHERE (is_deleted IS NULL OR is_deleted=0) ORDER BY id DESC")
+                    rows = cur.fetchall()
+                    cur.close()
+                    return render_template("equipment.html", rows=rows, edit_doc=None, status_badge=status_badge, errors=[f"Equipment name \"{name}\" already exists. Please use a different name."]), 400
                 cur.execute(
                     "INSERT INTO equipment (name, category, location, status, qr_code, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
                     (name, category, location, status, "", now_utc().replace(tzinfo=None)),
@@ -166,6 +184,13 @@ def scan(equipment_id):
                 if errors:
                     cur.close()
                     return render_template("equipment_scan.html", equipment=equipment, role=role, can_edit=True, status_badge=status_badge, report_error=" ".join(errors)), 400
+                cur.execute(
+                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
+                    (name, eq_oid),
+                )
+                if cur.fetchone():
+                    cur.close()
+                    return render_template("equipment_scan.html", equipment=equipment, role=role, can_edit=True, status_badge=status_badge, report_error=f"Equipment name \"{name}\" already exists. Please use a different name."), 400
                 cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
                     (name, category, location, status, eq_oid),
