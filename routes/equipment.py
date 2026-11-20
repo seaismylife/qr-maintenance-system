@@ -80,7 +80,7 @@ def index():
             if is_duplicate:
                 cur.close()
                 db.close()
-                    flash(f"Equipment name '{name}' already exists in the inventory.", "duplicate_name")
+                flash(f"Equipment name '{name}' already exists in the inventory.", "duplicate_name")
                 return redirect(url_for("equipment.index"))
 
             if existing_id:
