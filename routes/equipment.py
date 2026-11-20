@@ -57,15 +57,33 @@ def index():
 
             existing_id = oid(request.form.get("equipment_id"))
 
+            is_duplicate = False
             if existing_id:
                 cur.execute(
-                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
+                    "SELECT COUNT(*) AS cnt FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
                     (name, existing_id),
                 )
-                if cur.fetchone():
-                    cur.close()
-                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
-                    return redirect(url_for("equipment.index"))
+                row = cur.fetchone()
+                cur.fetchall()
+                if row and row["cnt"] > 0:
+                    is_duplicate = True
+            else:
+                cur.execute(
+                    "SELECT COUNT(*) AS cnt FROM equipment WHERE LOWER(name)=LOWER(%s) AND (is_deleted IS NULL OR is_deleted=0)",
+                    (name,),
+                )
+                row = cur.fetchone()
+                cur.fetchall()
+                if row and row["cnt"] > 0:
+                    is_duplicate = True
+
+            if is_duplicate:
+                cur.close()
+                db.close()
+                flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                return redirect(url_for("equipment.index"))
+
+            if existing_id:
                 cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
                     (name, category, location, status, existing_id),
@@ -73,14 +91,6 @@ def index():
                 eq_id_hex = str(existing_id)
                 action_desc = f"Updated equipment id {existing_id} ({name})"
             else:
-                cur.execute(
-                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND (is_deleted IS NULL OR is_deleted=0)",
-                    (name,),
-                )
-                if cur.fetchone():
-                    cur.close()
-                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
-                    return redirect(url_for("equipment.index"))
                 cur.execute(
                     "INSERT INTO equipment (name, category, location, status, qr_code, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
                     (name, category, location, status, "", now_utc().replace(tzinfo=None)),
@@ -183,11 +193,14 @@ def scan(equipment_id):
                     cur.close()
                     return render_template("equipment_scan.html", equipment=equipment, role=role, can_edit=True, status_badge=status_badge, report_error=" ".join(errors)), 400
                 cur.execute(
-                    "SELECT id FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
+                    "SELECT COUNT(*) AS cnt FROM equipment WHERE LOWER(name)=LOWER(%s) AND id!=%s AND (is_deleted IS NULL OR is_deleted=0)",
                     (name, eq_oid),
                 )
-                if cur.fetchone():
+                row = cur.fetchone()
+                cur.fetchall()
+                if row and row["cnt"] > 0:
                     cur.close()
+                    db.close()
                     flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
                     return redirect(url_for("equipment.scan", equipment_id=str(eq_oid)))
                 cur.execute(
