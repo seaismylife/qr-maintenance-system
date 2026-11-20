@@ -80,7 +80,7 @@ def index():
             if is_duplicate:
                 cur.close()
                 db.close()
-                flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                    flash(f"Equipment name '{name}' already exists in the inventory.", "duplicate_name")
                 return redirect(url_for("equipment.index"))
 
             if existing_id:
@@ -201,7 +201,7 @@ def scan(equipment_id):
                 if row and row["cnt"] > 0:
                     cur.close()
                     db.close()
-                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                    flash(f"Equipment name '{name}' already exists in the inventory.", "duplicate_name")
                     return redirect(url_for("equipment.scan", equipment_id=str(eq_oid)))
                 cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
