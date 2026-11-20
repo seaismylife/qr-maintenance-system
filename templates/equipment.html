@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+{% with dup_messages = get_flashed_messages(category_filter=["duplicate_name"]) %}
+{% if dup_messages %}
+<script>window.addEventListener('DOMContentLoaded', function(){ alert("⚠️ Duplicate Equipment Name\n\n{{ dup_messages[0] }}"); });</script>
+{% endif %}
+{% endwith %}
 {% if user and user.role in ['admin', 'custodian'] %}
 <div class="card">
     <div class="card-header">

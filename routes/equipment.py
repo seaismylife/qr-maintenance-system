@@ -63,10 +63,9 @@ def index():
                     (name, existing_id),
                 )
                 if cur.fetchone():
-                    cur.execute("SELECT * FROM equipment WHERE (is_deleted IS NULL OR is_deleted=0) ORDER BY id DESC")
-                    rows = cur.fetchall()
                     cur.close()
-                    return render_template("equipment.html", rows=rows, edit_doc=None, status_badge=status_badge, errors=[f"Equipment name \"{name}\" already exists. Please use a different name."]), 400
+                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                    return redirect(url_for("equipment.index"))
                 cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
                     (name, category, location, status, existing_id),
@@ -79,10 +78,9 @@ def index():
                     (name,),
                 )
                 if cur.fetchone():
-                    cur.execute("SELECT * FROM equipment WHERE (is_deleted IS NULL OR is_deleted=0) ORDER BY id DESC")
-                    rows = cur.fetchall()
                     cur.close()
-                    return render_template("equipment.html", rows=rows, edit_doc=None, status_badge=status_badge, errors=[f"Equipment name \"{name}\" already exists. Please use a different name."]), 400
+                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                    return redirect(url_for("equipment.index"))
                 cur.execute(
                     "INSERT INTO equipment (name, category, location, status, qr_code, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
                     (name, category, location, status, "", now_utc().replace(tzinfo=None)),
@@ -190,7 +188,8 @@ def scan(equipment_id):
                 )
                 if cur.fetchone():
                     cur.close()
-                    return render_template("equipment_scan.html", equipment=equipment, role=role, can_edit=True, status_badge=status_badge, report_error=f"Equipment name \"{name}\" already exists. Please use a different name."), 400
+                    flash(f"Duplicate Equipment Name: \"{name}\" already exists in the inventory.", "duplicate_name")
+                    return redirect(url_for("equipment.scan", equipment_id=str(eq_oid)))
                 cur.execute(
                     "UPDATE equipment SET name=%s, category=%s, location=%s, status=%s WHERE id=%s",
                     (name, category, location, status, eq_oid),
